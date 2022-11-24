@@ -10,10 +10,10 @@
 #define MOTOR_3_PWM 
 #define MOTOR_3_DIR 
 
-#define ENCODER_1_A PA_0
-#define ENCODER_1_B PA_1
-#define ENCODER_2_A PA_8
-#define ENCODER_2_B PB_10
+#define ENCODER_1_A PA0
+#define ENCODER_1_B PA1
+#define ENCODER_2_A PA8
+#define ENCODER_2_B PB10
 #define ENCODER_3_A
 #define ENCODER_3_B
 

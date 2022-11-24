@@ -24,7 +24,7 @@ void setup() {
     encoder2.init();
 
     Logging::info("Initialisation Encoder");
-
+    
 }
 
 void loop() {
@@ -38,4 +38,5 @@ void loop() {
     // }
     Logging::trace("Encoder 1 : %d", encoder1.get_value());
     Logging::trace("Encoder 2 : %d", encoder2.get_value());
+    delay(100);
 }
