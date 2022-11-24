@@ -5,8 +5,11 @@
 
 #define LOGGING_BUFFER 200
 
-
-
+/// @brief Static logging class.
+/// 
+/// Output formatted data to usb serial port
+/// with timestamp and severity.
+/// Interface similar to printf.
 class Logging {
 public:
     static void init(unsigned long speed);
