@@ -1,9 +1,11 @@
 #include <Arduino.h>
 #include "utilities/logging.h"
+#include "utilities/timer.h"
 
 #define LED 13
 
 int i = 0;
+Timer timer(1000);
 
 //Arduino LED1 blink
 void setup() {
@@ -16,12 +18,12 @@ void setup() {
 }
 
 void loop() {
-    i++;
+    if (timer.finished()) {
+        i++;
+        
+        digitalWrite(LED, !digitalRead(LED));
+        timer.reset();
 
-    digitalWrite(LED, HIGH);
-    delay(1000);
-    digitalWrite(LED, LOW);
-    delay(1000);
-
-    Logging::debug("Fin de la boucle %d", i);
+        Logging::debug("Fin de la boucle %d", i);
+    }
 }
