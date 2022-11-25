@@ -2,7 +2,7 @@
 #include "utilities/logging.h"
 #include "encoder.h"
 #include "config.h"
-#include <metro.h>
+#include "../lib/metro.h"
 
 #define LED 13
 
@@ -11,7 +11,6 @@ Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
 Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 
-//Arduino LED1 blink
 void setup() {
     pinMode(LED, OUTPUT);
 
