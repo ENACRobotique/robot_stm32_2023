@@ -3,6 +3,7 @@
 #include "encoder.h"
 #include "config.h"
 #include "../lib/metro.h"
+#include "holo_control.h"
 
 #define LED 13
 
