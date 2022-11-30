@@ -19,3 +19,9 @@ void HoloControl::set_vtarget(double vx, double vy, double vtheta){
     double v3 = motor_speeds(2);
     //add code to set motor pid target
 }
+
+void HoloControl::update(){
+    pid_1->Compute();
+    pid_2->Compute();
+    pid_3->Compute();
+}
