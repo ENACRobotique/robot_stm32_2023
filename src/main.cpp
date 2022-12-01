@@ -47,6 +47,7 @@ void loop() {
         Logging::trace("Encoder 3 : %d", encoder3.get_value());
     }
     if (metro_control_loop.check()){
+        
         motor2.send_motor_command(spd_list[(i++)%4]);
     }
 }

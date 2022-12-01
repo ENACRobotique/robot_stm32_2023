@@ -25,6 +25,10 @@ class MotorController {
         void send_motor_command(double cmd_speed_loc);
         void update();
 
+        void set_tgt_speed(double tgt_speed_loc) {
+            tgt_speed = tgt_speed_loc;
+        }
+
 
     private:
         PID pid;
