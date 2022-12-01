@@ -10,7 +10,7 @@
 #define LED 13
 
 Metro metro_odom = Metro(100);
-Metro metro_control_loop = Metro(1000);
+Metro metro_control_stop = Metro(5000);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
     //les autres tournent dans le sens trigo pour les valeurs positives
@@ -40,6 +40,7 @@ void setup() {
     Logging::info("Moteur 2 initialisé");
 
     motor2.set_tgt_speed(0.1);
+    metro_control_stop.reset();
 
 }
 
@@ -57,5 +58,9 @@ void loop() {
         //Serial.println(odom._speed3);
         motor2.update();
     }
+    if (metro_control_stop.check()){
+        motor2.set_tgt_speed(0);
+    }
+
 
 }
