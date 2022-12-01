@@ -6,6 +6,8 @@ Odometry::Odometry(Encoder *encoder1,Encoder *encoder2,Encoder *encoder3)
     _encoder2=encoder2;
     _encoder3=encoder3;
     
+    _time_previous=millis();
+    _time_current=millis();
 }
 
 void Odometry::update()
@@ -18,7 +20,7 @@ void Odometry::update()
 
     _time_current = millis();
 
-    float _dt_coef = (_time_current - _time_previous)* INCR_PER_TURN/(2*PI);
+    _dt_coef = (_time_current - _time_previous)/(1000.0*INCR_TO_M);
  
     compute_speed();
     compute_position();
@@ -27,9 +29,9 @@ void Odometry::update()
 
 void Odometry::compute_speed()
 {
-    _speed1 = RADIUS*(_raw_val1)/_dt_coef; // en m/s
-    _speed2 = RADIUS*(_raw_val2)/_dt_coef;
-    _speed3 = RADIUS*(_raw_val3)/_dt_coef;
+    _speed1 = _raw_val1/_dt_coef; // en m/s
+    _speed2 = _raw_val2/_dt_coef;
+    _speed3 = _raw_val3/_dt_coef;
     
 }
 

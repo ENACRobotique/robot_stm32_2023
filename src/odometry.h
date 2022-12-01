@@ -1,9 +1,10 @@
 #ifndef ODOMETRY_H
-#define ODOMETRY_H 
+#define ODOMETRY_H
+
 #include "encoder.h"
 #include <Arduino.h>
-#define INCR_PER_TURN 100.0
-#define RADIUS 0.05
+#define INCR_TO_M 0.0003750937734433608
+    //trouver mieux
 
 class Odometry 
 {
@@ -11,23 +12,21 @@ class Odometry
         Odometry(Encoder *encoder1,Encoder *encoder2,Encoder *encoder3);
 
         void update();
-        int _speed1;
-        int _speed2;
-        int _speed3;
-        
-        
+        double _speed1;
+        double _speed2;
+        double _speed3;
 
 
-    private:
-        
         int _raw_val1;
         int _raw_val2;
         int _raw_val3;
+        
+    private:
 
         unsigned long _time_previous;
         unsigned long _time_current;
 
-        float _dt_coef;
+        double _dt_coef;
         
 
         Encoder *_encoder1;
