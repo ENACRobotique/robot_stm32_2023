@@ -19,7 +19,9 @@ Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 
 Odometry odom(&encoder1, &encoder2, &encoder3);
 
+MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, 0.1, 0.1, &(odom._speed1), false);
 MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, 0.1, 0.1, &(odom._speed2), false);
+MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, 0.1, 0.1, &(odom._speed3), false);
 
 
 void setup() {
@@ -39,8 +41,9 @@ void setup() {
     motor2.init();
     Logging::info("Moteur 2 initialisé");
 
-    motor2.set_tgt_speed(0.1);
-    metro_control_stop.reset();
+    motor1.send_motor_command(0.1);
+    motor2.send_motor_command(0.1);
+    motor3.send_motor_command(0.1);
 
 }
 
@@ -56,10 +59,6 @@ void loop() {
         //Serial.println(odom._speed1);
         Serial.println(odom._speed2);
         //Serial.println(odom._speed3);
-        motor2.update();
-    }
-    if (metro_control_stop.check()){
-        motor2.set_tgt_speed(0);
     }
 
 

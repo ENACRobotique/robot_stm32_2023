@@ -4,7 +4,7 @@
 #include <Arduino.h>
 #include "../lib/Arduino-PID-Library-1.2.0/PID_v1.h"
 
-#define MOTOR_SPEED_M_PER_S_TO_PWM 318,8667520992843
+#define MOTOR_SPEED_M_PER_S_TO_PWM 318.8667520992843
     //ceci est un coefficient nul, il faut en trouver un meilleur
     //et c'est pas linéaire, cette valeur marche bien autour de PWM 10 soit, 0.03m/s
 
