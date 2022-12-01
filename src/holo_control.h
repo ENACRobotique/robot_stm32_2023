@@ -8,15 +8,15 @@
 #define ANGLE_M1 0.0
 #define ANGLE_M2 2*PI/3
 #define ANGLE_M3 4*PI/3
-
+#define RAYON 1.0
 
 class HoloControl{
     public:
         HoloControl(); // include MotorControl objects when they are implemented
         void stop(); // stop all motors (could be an alias for set_vtarget(0,0,0))
         void set_vtarget(double vx, double vy, double vtheta); // set open loop target velocities
-        //void set_target(double x, double y, double theta); // set closed loop target position
-        void update(); // update motor speeds 
+        void update(); // update motor speeds
+
         double *getcmd_v1_ptr();
         double *getcmd_v2_ptr();
         double *getcmd_v3_ptr();
@@ -27,8 +27,6 @@ class HoloControl{
              {-sin(ANGLE_M2), cos(ANGLE_M2), 1}, 
              {-sin(ANGLE_M3), cos(ANGLE_M3), 1}};
         PID *pid_1, *pid_2, *pid_3; // PID controllers for each motor
-        //PID pid_x, pid_y, pid_theta; // PID controllers for closed loop control
-        
         //variables used by PIDs
             //target speeds for motors
             double tgt_v1 = 0, tgt_v2 = 0, tgt_v3 = 0;

@@ -14,7 +14,7 @@ void HoloControl::stop(){
 }
 
 void HoloControl::set_vtarget(double vx, double vy, double vtheta){
-    Eigen::Vector3d vtarget(vx, vy, vtheta);
+    Eigen::Vector3d vtarget(vx, vy, RAYON*vtheta);
     Eigen::Vector3d motor_speeds = this->axis_to_motors * vtarget;
     tgt_v1 = motor_speeds(0);
     tgt_v2 = motor_speeds(1);
