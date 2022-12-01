@@ -1,10 +1,12 @@
 #include "holo_control.h"
 #include "utilities/logging.h"
 
-HoloControl::HoloControl(PID *pid_1, PID *pid_2, PID *pid_3){
-    this->pid_1 = pid_1;
-    this->pid_2 = pid_2;
-    this->pid_3 = pid_3;
+HoloControl::HoloControl(){
+    //TODO: calibrate PIDs
+    pid_1 = new PID(&cmd_v1, &setp_v1, &tgt_v1, 0.1, 0.1, 0.1, DIRECT, AUTOMATIC);
+    pid_2 = new PID(&cmd_v2, &setp_v2, &tgt_v2, 0.1, 0.1, 0.1, DIRECT, AUTOMATIC);
+    pid_3 = new PID(&cmd_v3, &setp_v3, &tgt_v3, 0.1, 0.1, 0.1, DIRECT, AUTOMATIC);
+
 }
 
 void HoloControl::stop(){
@@ -14,14 +16,25 @@ void HoloControl::stop(){
 void HoloControl::set_vtarget(double vx, double vy, double vtheta){
     Eigen::Vector3d vtarget(vx, vy, vtheta);
     Eigen::Vector3d motor_speeds = this->axis_to_motors * vtarget;
-    double v1 = motor_speeds(0);
-    double v2 = motor_speeds(1);
-    double v3 = motor_speeds(2);
-    //add code to set motor pid target
+    tgt_v1 = motor_speeds(0);
+    tgt_v2 = motor_speeds(1);
+    tgt_v3 = motor_speeds(2);
 }
 
 void HoloControl::update(){
     pid_1->Compute();
     pid_2->Compute();
     pid_3->Compute();
+}
+
+double *HoloControl::getcmd_v1_ptr(){
+    return &cmd_v1;
+}
+
+double *HoloControl::getcmd_v2_ptr(){
+    return &cmd_v2;
+}
+
+double *HoloControl::getcmd_v3_ptr(){
+    return &cmd_v3;
 }
