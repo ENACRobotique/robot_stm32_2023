@@ -9,6 +9,8 @@
 
 Metro metro_log_loop = Metro(100);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
+    //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
+    //les autres tournent dans le sens trigo pour les valeurs positives
 Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 
