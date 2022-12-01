@@ -39,23 +39,23 @@ void setup() {
     motor2.init();
     Logging::info("Moteur 2 initialisé");
 
-    motor2.send_motor_command(0.1);
+    motor2.set_tgt_speed(0.1);
 
 }
 
 void loop() {
-    // if (metro_odom.check()){
-    //     odom.update();
-    //     // Logging::trace("Encoder 1 : %d", encoder1.get_value());
-    //     // Logging::trace("Encoder 2 : %d", encoder2.get_value());
-    //     // Logging::trace("Encoder 3 : %d", encoder3.get_value());
-    //     // Logging::trace("Speed 1 : %lf", odom._speed1);
-    //     // Logging::trace("Speed 2 : %lf", odom._speed2);
-    //     // Logging::trace("Speed 3 : %lf", odom._speed3);
-    //     Serial.println(odom._speed1);
-    //     Serial.println(odom._speed2);
-    //     Serial.println(odom._speed3);
-        
-    // }
+    if (metro_odom.check()){
+        odom.update();
+        // Logging::trace("Encoder 1 : %d", encoder1.get_value());
+        // Logging::trace("Encoder 2 : %d", encoder2.get_value());
+        // Logging::trace("Encoder 3 : %d", encoder3.get_value());
+        // Logging::trace("Speed 1 : %lf", odom._speed1);
+        // Logging::trace("Speed 2 : %lf", odom._speed2);
+        // Logging::trace("Speed 3 : %lf", odom._speed3);
+        //Serial.println(odom._speed1);
+        Serial.println(odom._speed2);
+        //Serial.println(odom._speed3);
+        motor2.update();
+    }
 
 }
