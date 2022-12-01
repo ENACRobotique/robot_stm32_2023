@@ -12,7 +12,7 @@
 
 class HoloControl{
     public:
-        HoloControl(); // include MotorControl objects when they are implemented
+        HoloControl(MotorController *m1, MotorController *m2, MotorController *m3); // include MotorControl objects when they are implemented
         void stop(); // stop all motors (could be an alias for set_vtarget(0,0,0))
         void set_vtarget(double vx, double vy, double vtheta); // set open loop target velocities
         void update(); // update motor speeds
@@ -27,14 +27,9 @@ class HoloControl{
              {-sin(ANGLE_M2), cos(ANGLE_M2), 1}, 
              {-sin(ANGLE_M3), cos(ANGLE_M3), 1}};
         const Eigen::Matrix3d motors_to_axis = axis_to_motors.inverse();
-        PID *pid_1, *pid_2, *pid_3; // PID controllers for each motor
         //variables used by PIDs
-            //target speeds for motors
-            double tgt_v1 = 0, tgt_v2 = 0, tgt_v3 = 0;
-            //command speeds for motors
-            double cmd_v1 = 0, cmd_v2 = 0, cmd_v3 = 0;
-            //setpoints for motor PIDs
-            double setp_v1 = 0, setp_v2 = 0, setp_v3 = 0;
+        double *tgt_v1, *tgt_v2, *tgt_v3;
+        MotorController *m1, *m2, *m3;
 };
 
 #endif // HOLO_CONTROL_H
