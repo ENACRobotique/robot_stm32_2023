@@ -26,6 +26,7 @@ class HoloControl{
             {{-sin(ANGLE_M1), cos(ANGLE_M1), 1}, 
              {-sin(ANGLE_M2), cos(ANGLE_M2), 1}, 
              {-sin(ANGLE_M3), cos(ANGLE_M3), 1}};
+        const Eigen::Matrix3d motors_to_axis = axis_to_motors.inverse();
         PID *pid_1, *pid_2, *pid_3; // PID controllers for each motor
         //variables used by PIDs
             //target speeds for motors

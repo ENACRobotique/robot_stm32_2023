@@ -5,8 +5,8 @@
 
 #define MOTOR_1_PWM
 #define MOTOR_1_DIR 
-#define MOTOR_2_PWM 
-#define MOTOR_2_DIR 
+#define MOTOR_2_PWM PB5
+#define MOTOR_2_DIR PB4
 #define MOTOR_3_PWM 
 #define MOTOR_3_DIR 
 
