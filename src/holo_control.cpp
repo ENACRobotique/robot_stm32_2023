@@ -6,20 +6,13 @@ HoloControl::HoloControl(MotorController *m1_, MotorController *m2_, MotorContro
     m1(m1_), m2(m2_), m3(m3_) {
 }
 void HoloControl::stop(){
-    this->set_vtarget(0,0,0);
+    this->set_vtarget_pwm(0,0,0);
 }
 
-void HoloControl::set_vtarget(double vx, double vy, double vtheta){
-    Eigen::Vector3d vtarget(vx, vy, RAYON*vtheta);
+void HoloControl::set_vtarget_pwm(int pwm_x,int pwm_y, int pwm_theta){
+    Eigen::Vector3d vtarget(pwm_x, pwm_y, RAYON*pwm_theta);
     Eigen::Vector3d motor_speeds = this->axis_to_motors * vtarget;
-    m1->set_tgt_speed(motor_speeds(0));
-    m2->set_tgt_speed(motor_speeds(1));
-    m3->set_tgt_speed(motor_speeds(2));
-}
-
-void HoloControl::update(){
-    //TODO: implement PID control
-    m1->update();
-    m2->update();
-    m3->update();
+    m1->send_motor_command_pwm(static_cast<int>(motor_speeds(0)));
+    m2->send_motor_command_pwm(static_cast<int>(motor_speeds(1)));
+    m3->send_motor_command_pwm(static_cast<int>(motor_speeds(2)));
 }
