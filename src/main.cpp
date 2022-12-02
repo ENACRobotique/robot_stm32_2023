@@ -6,9 +6,9 @@
 #include "holo_control.h"
 #include "motor_control.h"
 
-#define LOOP
+//#define LOOP
 
-Metro metro_move_interval = Metro(0);
+Metro metro_move_interval = Metro(500);
 
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
@@ -33,6 +33,12 @@ Eigen::Vector4i vtarget_list[6] = {
 };
 int i = 0;
 
+bool avancer = false;
+bool reculer = false;
+bool tourner_gauche = false;
+bool tourner_droite = false;
+bool translater_gauche = false;
+bool translater_droite = false;
 
 void setup() {
     Logging::init(115200);
@@ -68,8 +74,57 @@ void loop() {
         i = (i + 1) % 6;
     }
     #else
-        motor1.send_motor_command_pwm(-30);
-        motor2.send_motor_command_pwm(-30);
-        motor3.send_motor_command_pwm(-30);
+        if (Serial.available()){
+            char c = Serial.read();
+            switch (c){
+                case 'a':
+                    avancer = true;
+                    reculer = false;
+                    break;
+                case 'r':
+                    reculer = true;
+                    avancer = false;
+                    break;
+                case 'h':
+                    tourner_gauche = true;
+                    tourner_droite = false;
+                    break;
+                case 'j':
+                    tourner_droite = true;
+                    tourner_gauche = false;
+                    break;
+                case 'g':
+                    translater_gauche = true;
+                    translater_droite = false;
+                    break;
+                case 'd':
+                    translater_droite = true;
+                    translater_gauche = false;
+                    break;
+                case 's':
+                    avancer = false;
+                    reculer = false;
+                    tourner_gauche = false;
+                    tourner_droite = false;
+                    translater_gauche = false;
+                    translater_droite = false;
+                    holo_control.stop();
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (metro_move_interval.check()){
+            int vx = (avancer ? 35 : 0) + (reculer ? -35 : 0);
+            int vy = (translater_gauche ? 35 : 0) + (translater_droite ? -35 : 0);
+            int w = (tourner_gauche ? 300 : 0) + (tourner_droite ? -300 : 0);
+            holo_control.set_vtarget_pwm(vx, vy, w);
+            // avancer = false;
+            // reculer = false;
+            // tourner_gauche = false;
+            // tourner_droite = false;
+            // translater_gauche = false;
+            // translater_droite = false;
+        }
     #endif
 }
