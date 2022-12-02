@@ -8,7 +8,7 @@
 
 #define LOOP
 
-Metro metro_move_interval = Metro(1000);
+Metro metro_move_interval = Metro(0);
 
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
@@ -23,13 +23,13 @@ MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false);
 
 HoloControl holo_control(&motor1, &motor2, &motor3);
 
-Eigen::Vector3d vtarget_list[6] = {
-    Eigen::Vector3d(35, 0, 0),
-    Eigen::Vector3d(0, 35, 0),
-    Eigen::Vector3d(-35, 0, 0),
-    Eigen::Vector3d(0, -35, 0),
-    Eigen::Vector3d(0, 0, 0), //objectif, faire un 360°
-    Eigen::Vector3d(0, 0, 0) //stop pour un moment avant de recommencer
+Eigen::Vector4i vtarget_list[6] = {
+    Eigen::Vector4i(35, 0, 0, 1000),
+    Eigen::Vector4i(0, 35, 0, 1000),
+    Eigen::Vector4i(-35, 0, 0, 1000),
+    Eigen::Vector4i(0, -35, 0, 1000),
+    Eigen::Vector4i(0, 0, 300, 5420), //objectif, faire un 360°
+    Eigen::Vector4i(0, 0, 0, 1000) //stop pour un moment avant de recommencer
 };
 int i = 0;
 
@@ -60,9 +60,11 @@ void setup() {
 void loop() {
     #ifdef LOOP
     if (metro_move_interval.check()) {
-        Eigen::Vector3d vtarget = vtarget_list[i];
-        Logging::info("vtarget = (%d, %d, %d)", vtarget(0), vtarget(1), vtarget(2));
+        Eigen::Vector4i vtarget = vtarget_list[i];
+        Logging::info("vtarget = (%d, %d, %d) for %d msecs", vtarget(0), vtarget(1), vtarget(2), vtarget(3));
         holo_control.set_vtarget_pwm(vtarget(0), vtarget(1), vtarget(2));
+        metro_move_interval.interval(vtarget(3));
+        metro_move_interval.reset();
         i = (i + 1) % 6;
     }
     #else
