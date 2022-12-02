@@ -6,7 +6,9 @@
 #include "holo_control.h"
 #include "motor_control.h"
 
-Metro metro_move_interval = Metro(1500);
+#define LOOP
+
+Metro metro_move_interval = Metro(1000);
 
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
@@ -26,7 +28,7 @@ Eigen::Vector3d vtarget_list[6] = {
     Eigen::Vector3d(0, 35, 0),
     Eigen::Vector3d(-35, 0, 0),
     Eigen::Vector3d(0, -35, 0),
-    Eigen::Vector3d(0, 0, 90), //objectif, faire un 360°
+    Eigen::Vector3d(0, 0, 0), //objectif, faire un 360°
     Eigen::Vector3d(0, 0, 0) //stop pour un moment avant de recommencer
 };
 int i = 0;
@@ -56,10 +58,16 @@ void setup() {
 }
 
 void loop() {
+    #ifdef LOOP
     if (metro_move_interval.check()) {
         Eigen::Vector3d vtarget = vtarget_list[i];
         Logging::info("vtarget = (%d, %d, %d)", vtarget(0), vtarget(1), vtarget(2));
         holo_control.set_vtarget_pwm(vtarget(0), vtarget(1), vtarget(2));
         i = (i + 1) % 6;
     }
+    #else
+        motor1.send_motor_command_pwm(-30);
+        motor2.send_motor_command_pwm(-30);
+        motor3.send_motor_command_pwm(-30);
+    #endif
 }
