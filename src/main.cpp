@@ -5,9 +5,10 @@
 #include "../lib/metro.h"
 #include "holo_control.h"
 #include "motor_control.h"
+#include "communication.h"
 
 //#define LOOP
-
+SerialRadio comm;
 Metro metro_move_interval = Metro(500);
 
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
@@ -42,6 +43,7 @@ bool translater_droite = false;
 
 void setup() {
     Logging::init(115200);
+    comm.init()
     Logging::info("Démarrage du robot bas niveau v0.1.0");
     // TODO: Logging::get()
 
