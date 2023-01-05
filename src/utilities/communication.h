@@ -7,4 +7,7 @@ class SerialRadio{
         void send();
 
     private:
-}
+        char buffer[256];
+};
+
+extern SerialRadio comm;
