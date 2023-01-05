@@ -9,6 +9,7 @@ int Encoder::get_value() {
 }
 
 void Encoder::init() {
+    counter = 0;
     pinMode(pinA, INPUT_PULLUP);
     pinMode(pinB, INPUT_PULLUP);
     attachInterrupt(digitalPinToInterrupt(pinA), [=]() {

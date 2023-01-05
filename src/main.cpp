@@ -5,7 +5,7 @@
 #include "../lib/metro.h"
 #include "holo_control.h"
 #include "motor_control.h"
-#include "communication.h"
+#include "utilities/communication.h"
 
 //#define LOOP
 SerialRadio comm;
@@ -43,7 +43,7 @@ bool translater_droite = false;
 
 void setup() {
     Logging::init(115200);
-    comm.init()
+    // comm.init();
     Logging::info("Démarrage du robot bas niveau v0.1.0");
     // TODO: Logging::get()
 

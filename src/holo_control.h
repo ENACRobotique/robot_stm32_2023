@@ -2,7 +2,6 @@
 #define HOLO_CONTROL_H
 
 #include <ArduinoEigen.h>
-#include "../lib/Arduino-PID-Library-1.2.0/PID_v1.h"
 #include "math.h"
 #include "motor_control.h"
 
