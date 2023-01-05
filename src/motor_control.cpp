@@ -1,9 +1,9 @@
 #include "motor_control.h"
 #include "utilities/logging.h"
 
-MotorController::MotorController(int mot_dir, int mot_pwn, bool reverse) :
+MotorController::MotorController(int mot_dir, int mot_pwn, bool reverse, float kp, float ki, float min, float max) :
     pin_pwm(mot_pwn), pin_dir(mot_dir), reverse(reverse) {
-
+    pid = new PID(kp, ki, 0.0, min, max);
 }
 
 void MotorController::init() {
@@ -21,4 +21,20 @@ void MotorController::send_motor_command_pwm(int pwm) {
         digitalWrite(pin_dir, (reverse)?HIGH:LOW);
     }
     analogWrite(pin_pwm, abs(pwm));
+}
+
+void MotorController::set_target_speed(float target_speed){
+
+}
+
+void MotorController::update(){
+
+}
+
+void MotorController::stop_and_reset_pid(){
+
+}
+
+void MotorController::set_pid_coefs(float kp, float ki){
+
 }

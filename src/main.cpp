@@ -18,9 +18,9 @@ Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
 Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 
-MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false);
-MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false);
-MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false);
+MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 0, 0, 0, 0);
+MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 0, 0, 0, 0);
+MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 0, 0, 0, 0);
 
 HoloControl holo_control(&motor1, &motor2, &motor3);
 
