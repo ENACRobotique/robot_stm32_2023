@@ -19,6 +19,7 @@ class MotorController {
         int pin_pwm;
         int pin_dir;
         bool reverse;
+        float target_speed;
 
 };
 

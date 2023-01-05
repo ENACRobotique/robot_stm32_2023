@@ -24,7 +24,7 @@ void MotorController::send_motor_command_pwm(int pwm) {
 }
 
 void MotorController::set_target_speed(float target_speed){
-
+    this->target_speed = target_speed;
 }
 
 void MotorController::update(){
