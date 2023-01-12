@@ -6,6 +6,7 @@
 #include "holo_control.h"
 #include "motor_control.h"
 #include "utilities/communication.h"
+#include "odometry.h"
 
 //#define LOOP
 SerialRadio comm;
@@ -22,6 +23,7 @@ MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 0, 0, 0, 0, 3);
 
 HoloControl holo_control(&motor1, &motor2, &motor3);
 
+Odometry odom(&encoder1, &encoder2, &encoder3);
 
 void setup() {
     Logging::init(115200);

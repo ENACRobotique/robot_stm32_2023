@@ -28,6 +28,17 @@ class Odometry{
             theta = 0;
             lastMillis = millis();
         };
+        void init(){
+            v1 = 0;
+            v2 = 0;
+            v3 = 0;
+            vx_robot = 0;
+            vy_robot = 0;
+            vtheta = 0;
+            vx = 0;
+            vy = 0;
+            lastMillis = millis();
+        }
         void update();
 
         float get_v1speed(){return v1;};
@@ -44,6 +55,10 @@ class Odometry{
         float get_x(){return x;};
         float get_y(){return y;};
         float get_theta(){return theta;};
+
+        void set_x(float x){this->x = x;};
+        void set_y(float y){this->y = y;};
+        void set_theta(float theta){this->theta = theta;};
 
     
     private:
