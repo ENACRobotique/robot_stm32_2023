@@ -10,6 +10,7 @@
 
 //#define LOOP
 SerialRadio comm;
+Metro bruh(50);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
     //les autres tournent dans le sens trigo pour les valeurs positives
@@ -44,9 +45,16 @@ void setup() {
     holo_control.stop();
     Logging::info("Robot arrêté");
 
+    odom.init();
+    bruh.reset();
+    Logging::info("Odometry initialisée");
+
     Logging::info("Init terminé");
 }
 
 void loop() {
-    
+    if (bruh.check()){
+        odom.update();
+        Logging::info("Odom %f %f %f", odom.get_v1speed(), odom.get_v2speed(), odom.get_v3speed());
+    }
 }
