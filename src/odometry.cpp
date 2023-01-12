@@ -1,5 +1,5 @@
 #include "odometry.h"
-#include "Arduino.h"
+
 
 void Odometry::update(){
 
@@ -29,6 +29,6 @@ void Odometry::update(){
     theta += vtheta * delta_time;
 
     //matrice de rotation et calcul des x, y dans le repere table (TODO)
-    
+
 
 }

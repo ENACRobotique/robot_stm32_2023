@@ -5,6 +5,7 @@
 #include "config.h"
 #include <ArduinoEigen.h>
 #include "math.h"
+#include "Arduino.h"
 
 #define ANGLE_M1 0.0
 #define ANGLE_M2 2*PI/3
@@ -13,7 +14,20 @@
 
 class Odometry{
     public:
-        Odometry(Encoder *e1, Encoder *e2, Encoder *e3);
+        Odometry(Encoder *e1, Encoder *e2, Encoder *e3):e1(e1),e2(e2),e3(e3){
+            v1 = 0;
+            v2 = 0;
+            v3 = 0;
+            vx_robot = 0;
+            vy_robot = 0;
+            vtheta = 0;
+            vx = 0;
+            vy = 0;
+            x = 0;
+            y = 0;
+            theta = 0;
+            lastMillis = millis();
+        };
         void update();
 
         float get_v1speed(){return v1;};
