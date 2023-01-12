@@ -5,8 +5,9 @@
 const float PROP_MAX_INTEGRAL=0.5;
 class PID {
 public:
-    PID(float kp, float ki, float kd, float min, float max):
-        kp(kp), ki(ki), kd(kd), min(min), max(max) {}
+    // PID(float kp, float ki, float kd, float min, float max):
+    PID(float kp, float ki, float min, float max):
+        kp(kp), ki(ki), min(min), max(max) { this->kd = 0; }
     float update(float error) {
         uint32_t now = millis();
         float dt = (now-prev_time)/1000.0;
