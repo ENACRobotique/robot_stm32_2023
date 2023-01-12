@@ -14,7 +14,8 @@ class HoloControl{
     public:
         HoloControl(MotorController *m1, MotorController *m2, MotorController *m3); // include MotorControl objects when they are implemented
         void stop(); // stop all motors (could be an alias for set_vtarget(0,0,0))
-        void set_vtarget_pwm(int pwm_x,int pwm_y, int pwm_theta); // set open loop target velocities
+        void set_vtarget_raw(float v1, float v2, float v3);
+        void set_vtarget_holo(float vx_robot, float vy_robot, float vtheta);
         
     private:
         const Eigen::Matrix3d axis_to_motors 

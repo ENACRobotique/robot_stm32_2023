@@ -5,9 +5,17 @@
 const float PROP_MAX_INTEGRAL=0.5;
 class PID {
 public:
-    // PID(float kp, float ki, float kd, float min, float max):
+    /**
+     * Instantiate PID
+    */
     PID(float kp, float ki, float min, float max):
         kp(kp), ki(ki), min(min), max(max) { this->kd = 0; }
+
+    /**
+     * Update PID calculations
+     * @param error difference between target speed and current speed
+     * @returns speed command
+    */
     float update(float error) {
         uint32_t now = millis();
         float dt = (now-prev_time)/1000.0;
@@ -22,10 +30,15 @@ public:
         float output = kp * error + ki * integral + kd * delta_error;
         return clamp(min, max, output);
     }
+
+    /**
+     * Resets PID
+    */
     void reset() {
         integral = 0.0;
         prev_error = 0.0;
     }
+
     void set_kp(float kp) { this->kp = kp; }
     void set_ki(float ki){ this->ki = ki; }
     // void set_kd(float kd);

@@ -8,9 +8,8 @@ class MotorController {
     public:
         MotorController(int mot_dir, int mot_pwm, bool reverse, float kp, float ki, float min, float max, int motor_number);
         void init();
-        void send_motor_command_pwm(int pwm);
         void set_target_speed(float speed_target);
-        void update();
+        void update(float current_speed);
         void stop_and_reset_pid();
         void set_pid_coefs(float kp, float ki);
 
@@ -21,6 +20,7 @@ class MotorController {
         bool reverse;
         float target_speed;
         int motor_number;
+        void send_motor_command_pwm(int pwm);
 
 };
 
