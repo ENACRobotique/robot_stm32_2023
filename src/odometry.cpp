@@ -27,5 +27,8 @@ void Odometry::update(){
     //mise à jour theta
 
     theta += vtheta * delta_time;
+
+    //matrice de rotation et calcul des x, y dans le repere table (TODO)
     
+
 }
