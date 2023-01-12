@@ -37,6 +37,7 @@ class Odometry{
         float vx_robot, vy_robot, vtheta;
         float vx, vy;
         float x, y, theta;
+        uint32_t lastMillis;
 
         Encoder *e1, *e2, *e3;
         const Eigen::Matrix3d axis_to_motors 
