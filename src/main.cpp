@@ -55,6 +55,11 @@ void setup() {
 void loop() {
     if (bruh.check()){
         odom.update();
-        Logging::info("Odom %f %f %f", odom.get_v1speed(), odom.get_v2speed(), odom.get_v3speed());
+        //Serial.printf("Odom %d %d %d\n", ((int) 1000.f * odom.get_v1speed()), ((int) 1.0f * odom.get_v2speed()), ((int) 1e6 * odom.get_v3speed()));
+        Serial.print(odom.get_v1speed() );
+        Serial.print( "  " );
+        Serial.print(odom.get_v2speed() );
+        Serial.print( "  " );
+        Serial.println(odom.get_v3speed() );
     }
 }
