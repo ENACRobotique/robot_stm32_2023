@@ -7,7 +7,7 @@
 
 #define ANGLE_M1 0.0
 #define ANGLE_M2 2*PI/3
-#define ANGLE_M3 4*PI/3
+#define ANGLE_M3 -2*PI/3
 #define RAYON 0.115
 
 class HoloControl{
@@ -16,6 +16,7 @@ class HoloControl{
         void stop(); // stop all motors (could be an alias for set_vtarget(0,0,0))
         void set_vtarget_raw(float v1, float v2, float v3);
         void set_vtarget_holo(float vx_robot, float vy_robot, float vtheta);
+        void update(float v1, float v2, float v3);
         
     private:
         const Eigen::Matrix3d axis_to_motors 

@@ -22,3 +22,9 @@ void HoloControl::set_vtarget_holo(float vx_robot, float vy_robot, float vtheta)
     m2->set_target_speed(motor_speeds(1));
     m3->set_target_speed(motor_speeds(2));
 }
+
+void HoloControl::update(float v1, float v2, float v3){
+    m1->update(v1);
+    m2->update(v2);
+    m3->update(v3);
+}

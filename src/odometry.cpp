@@ -22,30 +22,28 @@ void Odometry::update(){
     v3 = delta_3/delta_time;
 
     //mutiplier par la matrix motors_to_axis
-    Eigen::Vector3d vmotors(v1, v2, v3);
     Eigen::Vector3d deltas(delta_1, delta_2, delta_3);
-    Eigen::Vector3d v_robot = motors_to_axis * vmotors;
     Eigen::Vector3d deltas_local_robot = motors_to_axis * deltas;
-    //set ensuite vx_robot, vy_robot, vtheta
-    vx_robot = v_robot(0);
-    vy_robot = v_robot(1);
-    vtheta = v_robot(2)/RAYON;
     
     //mise à jour deltas_repere_locals
-    float delta_x_robot = deltas_local_robot(0);
-    float delta_y_robot = deltas_local_robot(1);
+    float delta_xr = deltas_local_robot(0);
+    float delta_yr = deltas_local_robot(1);
     float delta_theta = deltas_local_robot(2)/RAYON;
 
     theta += delta_theta;
 
-    //matrice de rotation et calcul des x, y dans le repere table (TODO)
+    vx_robot = delta_xr/delta_time;
+    vy_robot = delta_yr/delta_time;
+
     float cos_t = cos(theta);
     float sin_t = sin(theta);
+    
+    float delta_x = cos_t * delta_xr - sin_t * delta_yr;
+    float delta_y = sin_t * delta_xr + cos_t * delta_yr;
 
-    float deltax_global = cos_t * delta_x_robot - sin_t * delta_y_robot;
-    float deltay_global = sin_t * delta_x_robot + cos_t * delta_y_robot;
+    vx = delta_x/delta_time;
+    vy = delta_y/delta_time;
 
-    x += deltax_global;
-    y += deltay_global;
-
+    x += delta_x;
+    y += delta_y;
 }
