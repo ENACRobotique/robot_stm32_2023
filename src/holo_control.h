@@ -4,11 +4,7 @@
 #include <ArduinoEigen.h>
 #include "math.h"
 #include "motor_control.h"
-
-#define ANGLE_M1 0.0
-#define ANGLE_M2 2*PI/3
-#define ANGLE_M3 -2*PI/3
-#define RAYON 0.115
+#include "config.h"
 
 class HoloControl{
     public:

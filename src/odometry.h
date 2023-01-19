@@ -7,11 +7,6 @@
 #include "math.h"
 #include "Arduino.h"
 
-#define ANGLE_M1 0.0
-#define ANGLE_M2 2*PI/3
-#define ANGLE_M3 4*PI/3
-#define RAYON 0.115
-
 class Odometry{
     public:
         Odometry(Encoder *e1, Encoder *e2, Encoder *e3):e1(e1),e2(e2),e3(e3){

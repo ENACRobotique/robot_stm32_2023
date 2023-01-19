@@ -5,12 +5,9 @@
 #include "../lib/metro.h"
 #include "holo_control.h"
 #include "motor_control.h"
-#include "utilities/communication.h"
 #include "odometry.h"
 
-//#define LOOP
-SerialRadio comm;
-Metro bruh(10);
+Metro odom_refresh(10);
 Metro bruhcmd(2000);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
@@ -19,6 +16,7 @@ Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
 Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 
+//MotorController(int mot_dir, int mot_pwm, bool reverse, float kp, float ki, float min, float max, int motor_number);
 MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.5, -200.0, 200.0, 1);
 MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.5, -200.0, 200.0, 2);
 MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.5, -200.0, 200.0, 3);
@@ -55,7 +53,7 @@ void setup() {
     Logging::info("Robot arrêté");
 
     odom.init();
-    bruh.reset();
+    odom_refresh.reset();
     Logging::info("Odometry initialisée");
 
     Logging::info("Init terminé");
@@ -69,17 +67,15 @@ void loop() {
         holo_control.set_vtarget_holo(0.0, tableau[position], 0.0);
     }
 
-    if (bruh.check()){
+    if (odom_refresh.check()){
         odom.update();
         holo_control.update(
-            odom.get_v1speed(),
-            odom.get_v2speed(),
-            odom.get_v3speed()
+           odom.get_v1speed(),
+           odom.get_v2speed(),
+           odom.get_v3speed()
         );
 
-        //Serial.printf("Odom %d %d %d\n", ((int) 1000.f * odom.get_v1speed()), ((int) 1.0f * odom.get_v2speed()), ((int) 1e6 * odom.get_v3speed()));
-        /*
-        Serial.print( "(vx: " );
+        /*Serial.print( "(vx: " );
         Serial.print(odom.get_vx() );
         Serial.print( ", vy: " );
         Serial.print(odom.get_vy() );
@@ -91,10 +87,12 @@ void loop() {
         Serial.print(odom.get_y() );
         Serial.print( ", theta: " );
         Serial.print(odom.get_theta() );
-        Serial.println( ")" );
-        */
-        Serial.print(tableau[position]);
+        Serial.println( ")" );*/
+
+        Serial.print(motor2.get_target_speed());
         Serial.print(" ");
-        Serial.println(odom.get_vy());
+        Serial.print(motor2.get_ramped_target_speed());
+        Serial.print(" ");
+        Serial.println(odom.get_v2speed());
     }
 }

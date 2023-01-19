@@ -12,6 +12,9 @@ class MotorController {
         void update(float current_speed);
         void stop_and_reset_pid();
         void set_pid_coefs(float kp, float ki);
+        void send_motor_command_pwm(int pwm);
+        float get_target_speed(){return target_speed;};
+        float get_ramped_target_speed(){return ramped_target_speed;};
 
     private:
         PID *pid;
@@ -19,8 +22,9 @@ class MotorController {
         int pin_dir;
         bool reverse;
         float target_speed;
+        float ramped_target_speed;
         int motor_number;
-        void send_motor_command_pwm(int pwm);
+        uint32_t lastUpdate;
 
 };
 

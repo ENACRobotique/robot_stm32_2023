@@ -20,4 +20,11 @@
 #define INCREMENT_TO_METRE 0.000375// 1.0/2666.66
 #define VITESSE_CONSIGNE_TO_PWM_MOTOR 242.45
 
+#define ANGLE_M1 0.0
+#define ANGLE_M2 2*PI/3
+#define ANGLE_M3 -2*PI/3
+#define RAYON 0.115
+
+#define MAX_ACCEL 2.0f //m.s^2
+
 #endif // CONFIG_HEADER

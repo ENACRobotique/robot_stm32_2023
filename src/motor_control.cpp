@@ -11,6 +11,7 @@ void MotorController::init() {
     pinMode(pin_dir, OUTPUT);
     pinMode(pin_pwm, OUTPUT);
     send_motor_command_pwm(0);
+    lastUpdate = millis();
     pid->reset();
 }
 
@@ -27,14 +28,19 @@ void MotorController::send_motor_command_pwm(int pwm) {
 
 void MotorController::set_target_speed(float target_speed){
     this->target_speed = target_speed;
+    lastUpdate = millis();
     pid->reset();
 }
 
 void MotorController::update(float current_speed){
     // get error, then update pid with error
-    float error = target_speed - current_speed;
+    uint32_t currentMillis = millis();
+    float dv = MAX_ACCEL*static_cast<float>(currentMillis - lastUpdate)/1000.0f;
+    ramped_target_speed = clamp(ramped_target_speed - dv, ramped_target_speed + dv, target_speed);
+    lastUpdate = currentMillis;
+    float error = ramped_target_speed - current_speed;
     float speed_cmd = pid->update(error);
-
+    
     int pwm_cmd = static_cast<int>(speed_cmd * VITESSE_CONSIGNE_TO_PWM_MOTOR);
 
     send_motor_command_pwm(pwm_cmd);
@@ -42,6 +48,7 @@ void MotorController::update(float current_speed){
 
 void MotorController::stop_and_reset_pid(){
     send_motor_command_pwm(0);
+    lastUpdate = millis();
     pid->reset();
 }
 
