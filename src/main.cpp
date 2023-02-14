@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include "utilities/logging.h"
 #include "encoder.h"
 #include "config.h"
 #include "../lib/metro.h"
@@ -21,9 +20,9 @@ MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.5, -200.0, 200.0,
 MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.5, -200.0, 200.0, 2);
 MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.5, -200.0, 200.0, 3);
 
-HoloControl holo_control(&motor1, &motor2, &motor3);
-
 Odometry odom(&encoder1, &encoder2, &encoder3);
+
+HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 
 int position = 0;
 float tableau[] = {
@@ -34,30 +33,27 @@ float tableau[] = {
 };
 
 void setup() {
-    Logging::init(115200);
-    // comm.init();
-    Logging::info("Démarrage du robot bas niveau v0.1.0");
-    // TODO: Logging::get()
+    Serial.begin(115200);
+    Serial.println("Démarrage du robot bas niveau v0.1.0");
 
     encoder1.init();
     encoder2.init();
     encoder3.init();
-    Logging::info("Encodeurs initialisés");
+    Serial.println("Encodeurs initialisés");
 
     motor1.init();
     motor2.init();
     motor3.init();
-    Logging::info("Moteurs initialisés");
+    Serial.println("Moteurs initialisés");
 
     holo_control.stop();
-    Logging::info("Robot arrêté");
+    Serial.println("Robot arrêté");
 
     odom.init();
     odom_refresh.reset();
-    Logging::info("Odometry initialisée");
+    Serial.println("Odometry initialisée");
 
-    Logging::info("Init terminé");
-
+    Serial.println("Init terminé");
 }
 
 
@@ -69,30 +65,6 @@ void loop() {
 
     if (odom_refresh.check()){
         odom.update();
-        holo_control.update(
-           odom.get_v1speed(),
-           odom.get_v2speed(),
-           odom.get_v3speed()
-        );
-
-        /*Serial.print( "(vx: " );
-        Serial.print(odom.get_vx() );
-        Serial.print( ", vy: " );
-        Serial.print(odom.get_vy() );
-        Serial.print( ") " );
-
-        Serial.print( "(x: " );
-        Serial.print(odom.get_x() );
-        Serial.print( ", y: " );
-        Serial.print(odom.get_y() );
-        Serial.print( ", theta: " );
-        Serial.print(odom.get_theta() );
-        Serial.println( ")" );*/
-
-        Serial.print(motor2.get_target_speed());
-        Serial.print(" ");
-        Serial.print(motor2.get_ramped_target_speed());
-        Serial.print(" ");
-        Serial.println(odom.get_v2speed());
+        holo_control.update();
     }
 }

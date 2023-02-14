@@ -1,5 +1,4 @@
 #include "motor_control.h"
-#include "utilities/logging.h"
 #include "config.h"
 
 MotorController::MotorController(int mot_dir, int mot_pwn, bool reverse, float kp, float ki, float min, float max, int motor_number) :
