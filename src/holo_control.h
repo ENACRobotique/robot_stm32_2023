@@ -13,6 +13,10 @@ class HoloControl{
         void stop(); // stop all motors (could be an alias for set_vtarget(0,0,0))
         void set_vtarget_raw(float v1, float v2, float v3);
         void set_vtarget_holo(float vx_robot, float vy_robot, float vtheta);
+
+        void set_vtarget_global(float vx_table, float vy_table, float vtheta); // TO TEST
+        void set_ptarget(float x, float y, float theta); // TODO
+
         void update();
 
     private:
@@ -23,6 +27,9 @@ class HoloControl{
         const Eigen::Matrix3d motors_to_axis = axis_to_motors.inverse();
         MotorController *m1, *m2, *m3;
         Odometry *odom;
+
+        //add attributes to store target position, and associated parameters, plus PIDs
+        
 };
 
 #endif // HOLO_CONTROL_H

@@ -34,7 +34,7 @@ float tableau[] = {
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("Démarrage du robot bas niveau v0.1.0");
+    Serial.println("Démarrage du robot bas niveau v0.2.0");
 
     encoder1.init();
     encoder2.init();
@@ -47,13 +47,13 @@ void setup() {
     Serial.println("Moteurs initialisés");
 
     holo_control.stop();
-    Serial.println("Robot arrêté");
+    Serial.println("Robot à l'arrêt");
 
     odom.init();
     odom_refresh.reset();
-    Serial.println("Odometry initialisée");
+    Serial.println("Odométrie initialisée");
 
-    Serial.println("Init terminé");
+    Serial.println("Initialisation terminée");
 }
 
 
