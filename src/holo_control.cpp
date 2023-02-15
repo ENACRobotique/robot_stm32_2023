@@ -30,18 +30,16 @@ void HoloControl::set_vtarget_holo(float vx_robot, float vy_robot, float vtheta)
     cmd_mode = VHOLO;
 }
 
-// FIXME: doesn't work when vtarget_holo does, wtf i can't even with this shit
 void HoloControl::set_vtarget_table(float vx_table, float vy_table, float vtheta){
     // calc vx_robot, vy_robot accounting for robot orientation (sin(theta), cos(theta))
     vx_table_tgt = vx_table;
     vy_table_tgt = vy_table;
     vtheta_tgt = vtheta;
-    float mtheta = -odom->get_theta();
+    float mtheta = -(odom->get_theta());
     float cos_t = cos(mtheta);
     float sin_t = sin(mtheta);
     float vx_robot = cos_t * vx_table_tgt - sin_t * vy_table_tgt;
     float vy_robot = sin_t * vx_table_tgt + cos_t * vy_table_tgt;
-
     this->set_vtarget_holo(vx_robot, vy_robot, vtheta);
     cmd_mode = VTABLE;
 }
@@ -64,7 +62,7 @@ void HoloControl::update(){
         this->set_vtarget_holo(vx_robot, vy_robot, vtheta_tgt);
         cmd_mode = VTABLE; // seems stupid, but keep this line, otherwise cmd_mode gets erased to VHOLO
     }
-    
+ 
     m1->update(odom->get_v1speed());
     m2->update(odom->get_v2speed());
     m3->update(odom->get_v3speed());

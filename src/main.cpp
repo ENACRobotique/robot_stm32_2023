@@ -80,11 +80,11 @@ void loop() {
         // Serial.print(odom.get_theta() );
         // Serial.println( ")" );
 
-        Serial.print(motor2.get_target_speed());
-        Serial.print(" ");
-        Serial.print(motor2.get_ramped_target_speed());
-        Serial.print(" ");
-        Serial.println(odom.get_v2speed());
+        // Serial.print(motor2.get_target_speed());
+        // Serial.print(" ");
+        // Serial.print(motor2.get_ramped_target_speed());
+        // Serial.print(" ");
+        // Serial.println(odom.get_v2speed());
     }
 
     
