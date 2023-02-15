@@ -7,6 +7,12 @@
 #include "config.h"
 #include "odometry.h"
 
+#define STOP 0
+#define VRAW 1
+#define VHOLO 2
+#define VTABLE 3
+#define POSTABLE 4
+
 class HoloControl{
     public:
         HoloControl(MotorController *m1, MotorController *m2, MotorController *m3, Odometry *odom); // include MotorControl objects when they are implemented
@@ -14,7 +20,7 @@ class HoloControl{
         void set_vtarget_raw(float v1, float v2, float v3);
         void set_vtarget_holo(float vx_robot, float vy_robot, float vtheta);
 
-        void set_vtarget_global(float vx_table, float vy_table, float vtheta); // TO TEST
+        void set_vtarget_table(float vx_table, float vy_table, float vtheta); // TO TEST
         void set_ptarget(float x, float y, float theta); // TODO
 
         void update();
@@ -29,7 +35,9 @@ class HoloControl{
         Odometry *odom;
 
         //add attributes to store target position, and associated parameters, plus PIDs
-        
+        int cmd_mode;
+        float vx_table_tgt, vy_table_tgt, vtheta_tgt;
+
 };
 
 #endif // HOLO_CONTROL_H

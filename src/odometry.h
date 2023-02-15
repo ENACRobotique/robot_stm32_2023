@@ -10,28 +10,28 @@
 class Odometry{
     public:
         Odometry(Encoder *e1, Encoder *e2, Encoder *e3):e1(e1),e2(e2),e3(e3){
-            v1 = 0;
-            v2 = 0;
-            v3 = 0;
-            vx_robot = 0;
-            vy_robot = 0;
-            vtheta = 0;
-            vx = 0;
-            vy = 0;
-            x = 0;
-            y = 0;
-            theta = 0;
+            v1 = 0.f;
+            v2 = 0.f;
+            v3 = 0.f;
+            vx_robot = 0.f;
+            vy_robot = 0.f;
+            vtheta = 0.f;
+            vx = 0.f;
+            vy = 0.f;
+            x = 0.f;
+            y = 0.f;
+            theta = 0.f;
             lastMillis = millis();
         };
         void init(){
-            v1 = 0;
-            v2 = 0;
-            v3 = 0;
-            vx_robot = 0;
-            vy_robot = 0;
-            vtheta = 0;
-            vx = 0;
-            vy = 0;
+            v1 = 0.f;
+            v2 = 0.f;
+            v3 = 0.f;
+            vx_robot = 0.f;
+            vy_robot = 0.f;
+            vtheta = 0.f;
+            vx = 0.f;
+            vy = 0.f;
             lastMillis = millis();
         }
         void update();

@@ -7,7 +7,7 @@
 #include "odometry.h"
 
 Metro odom_refresh(10);
-Metro bruhcmd(2000);
+Metro bruhcmd(1000);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
     //les autres tournent dans le sens trigo pour les valeurs positives
@@ -60,11 +60,32 @@ void setup() {
 void loop() {
     if (bruhcmd.check()) {
         position = (position + 1) % 4;
-        holo_control.set_vtarget_holo(0.0, tableau[position], 0.0);
+        holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     }
 
     if (odom_refresh.check()){
         odom.update();
         holo_control.update();
+        // Serial.print( "(vx: " );
+        // Serial.print(odom.get_vx() );
+        // Serial.print( ", vy: " );
+        // Serial.print(odom.get_vy() );
+        // Serial.print( ") " );
+
+        // Serial.print( "(x: " );
+        // Serial.print(odom.get_x() );
+        // Serial.print( ", y: " );
+        // Serial.print(odom.get_y() );
+        // Serial.print( ", theta: " );
+        // Serial.print(odom.get_theta() );
+        // Serial.println( ")" );
+
+        Serial.print(motor2.get_target_speed());
+        Serial.print(" ");
+        Serial.print(motor2.get_ramped_target_speed());
+        Serial.print(" ");
+        Serial.println(odom.get_v2speed());
     }
+
+    
 }
