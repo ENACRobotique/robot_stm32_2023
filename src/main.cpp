@@ -16,9 +16,14 @@ Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 
 //MotorController(int mot_dir, int mot_pwm, bool reverse, float kp, float ki, float min, float max, int motor_number);
-MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.5, -200.0, 200.0, 1);
-MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.5, -200.0, 200.0, 2);
-MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.5, -200.0, 200.0, 3);
+// MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.5, -200.0, 200.0, 1);
+// MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.5, -200.0, 200.0, 2);
+// MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.5, -200.0, 200.0, 3);
+
+
+MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.0, -200.0, 200.0, 1);
+MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.0, -200.0, 200.0, 2);
+MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.0, -200.0, 200.0, 3);
 
 Odometry odom(&encoder1, &encoder2, &encoder3);
 
@@ -54,31 +59,33 @@ void setup() {
     Serial.println("Odométrie initialisée");
 
     Serial.println("Initialisation terminée");
+
+    holo_control.set_vtarget_table(0.4f, 0.0f, 0.8f);
 }
 
 
 void loop() {
-    if (bruhcmd.check()) {
-        position = (position + 1) % 4;
-        holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
-    }
+    // if (bruhcmd.check()) {
+    //     position = (position + 1) % 4;
+    //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
+    // }
 
     if (odom_refresh.check()){
         odom.update();
         holo_control.update();
-        // Serial.print( "(vx: " );
-        // Serial.print(odom.get_vx() );
-        // Serial.print( ", vy: " );
-        // Serial.print(odom.get_vy() );
-        // Serial.print( ") " );
+        Serial.print( "(vx: " );
+        Serial.print(odom.get_vx() );
+        Serial.print( ", vy: " );
+        Serial.print(odom.get_vy() );
+        Serial.print( ") " );
 
-        // Serial.print( "(x: " );
-        // Serial.print(odom.get_x() );
-        // Serial.print( ", y: " );
-        // Serial.print(odom.get_y() );
-        // Serial.print( ", theta: " );
-        // Serial.print(odom.get_theta() );
-        // Serial.println( ")" );
+        Serial.print( "(x: " );
+        Serial.print(odom.get_x() );
+        Serial.print( ", y: " );
+        Serial.print(odom.get_y() );
+        Serial.print( ", theta: " );
+        Serial.print(odom.get_theta() );
+        Serial.println( ")" );
 
         // Serial.print(motor2.get_target_speed());
         // Serial.print(" ");

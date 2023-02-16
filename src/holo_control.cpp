@@ -26,7 +26,7 @@ void HoloControl::set_vtarget_raw(float v1, float v2, float v3){
 void HoloControl::set_vtarget_holo(float vx_robot, float vy_robot, float vtheta){
     Eigen::Vector3d vtarget(vx_robot, vy_robot, RAYON*vtheta);
     Eigen::Vector3d motor_speeds = this->axis_to_motors * vtarget;
-    set_vtarget_raw(motor_speeds(0), motor_speeds(1), motor_speeds(1));
+    set_vtarget_raw(motor_speeds(0), motor_speeds(1), motor_speeds(2));
     cmd_mode = VHOLO;
 }
 
@@ -53,7 +53,7 @@ void HoloControl::set_ptarget(float x, float y, float theta){
 void HoloControl::update(){
     // Update target_speeds if target is position
     if (cmd_mode == VTABLE) {
-        float mtheta = -odom->get_theta();
+        float mtheta = -(odom->get_theta());
         float cos_t = cos(mtheta);
         float sin_t = sin(mtheta);
         float vx_robot = cos_t * vx_table_tgt - sin_t * vy_table_tgt;
