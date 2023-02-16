@@ -27,4 +27,8 @@
 
 #define MAX_ACCEL 2.0f //m.s^2
 
+#define MAX_VITESSE 0.5f //m.s^-1
+#define MAX_VITESSE_ROTATION 0.4f //rad.s^-1
+#define DECELERATION_AVEC_DISTANCE 1.0f //m.s^-2
+
 #endif // CONFIG_HEADER

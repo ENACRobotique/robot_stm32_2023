@@ -36,8 +36,10 @@ class HoloControl{
 
         //add attributes to store target position, and associated parameters, plus PIDs
         int cmd_mode;
+        float x_table_tgt, y_table_tgt, theta_tgt;
         float vx_table_tgt, vy_table_tgt, vtheta_tgt;
-
+        void recalc_vtargets_table_to_holo();
+        void recalc_vtargets_position_tgt();
 };
 
 #endif // HOLO_CONTROL_H
