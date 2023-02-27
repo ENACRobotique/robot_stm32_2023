@@ -9,9 +9,11 @@
 #define MOTOR_2_DIR PB2
 #define MOTOR_3_PWM PB10
 #define MOTOR_3_DIR PB15
-
-#define ENCODER_1_A PC14
-#define ENCODER_1_B PC13
+// /!\ THIS CODE WORKS ONLY IF YOU DO THE FOLLOWING : 
+//remove R34 and R36
+//Solder SB48 and SB49
+#define ENCODER_1_A PC13
+#define ENCODER_1_B PC14
 #define ENCODER_2_A PC3
 #define ENCODER_2_B PC2
 #define ENCODER_3_A PC9 
