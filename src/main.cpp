@@ -9,7 +9,7 @@
 #include "AX12A.h"
 Servo mainAttrapeDisque;
 Metro pulseBras(10000);
-Metro pulseMain(5000);
+Metro pulseMain(10000);
 uint8_t countPulseMain=0;
 uint8_t countPulseBras=0;
 DynamixelSerial bras;
@@ -44,9 +44,13 @@ float tableau[] = {
 };
 
 void setup() {
+    pulseBras.reset();
+    delay(5000);
+    pulseMain.reset();
     Serial.begin(115200);
     Serial3.begin(500000);
     bras.init(&Serial3);
+    mainAttrapeDisque.attach(SERVO_1,2000);
     Serial.println("Démarrage du robot bas niveau v0.2.0");
     encoder1.init();
     encoder2.init();
@@ -73,7 +77,7 @@ void loop() {
     // }
     if (pulseBras.check()){
         if(!(++countPulseBras%2)){
-            bras.move(5,400);
+            bras.move(5,525);
             countPulseBras%=2;
         }
         else{
@@ -83,6 +87,7 @@ void loop() {
     }
     if(pulseMain.check()){
         if(!(++countPulseMain%2)){
+            countPulseMain%=2;
             mainAttrapeDisque.writeMicroseconds(2000);
         }
         else{
