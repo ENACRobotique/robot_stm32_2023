@@ -19,7 +19,19 @@
 #define ENCODER_3_A PC9 
 #define ENCODER_3_B PC8
 
-#define INCREMENT_TO_METRE 0.000375// 1.0/2666.66
+#define ESC PA6
+#define SERVO_1 PA7
+#define SERVO_2 PA8
+#define SERVO_3 PA9
+#define SERVO_4 PB6
+#define SERVO_5 PC7
+
+#define AX12A_PIN PC4
+
+#define CLK_AFFICHEUR PB11
+#define DIO_AFFICHEUR PB12
+
+#define INCREMENT_TO_METRE 0.0003447// 1.0/2666.66 
 #define VITESSE_CONSIGNE_TO_PWM_MOTOR 242.45
 
 #define ANGLE_M1 0.0
@@ -29,7 +41,7 @@
 
 #define MAX_ACCEL 2.0f //m.s^2
 
-#define MAX_VITESSE 0.5f //m.s^-1
+#define MAX_VITESSE 0.8f //m.s^-1
 #define MAX_VITESSE_ROTATION 0.4f //rad.s^-1
 #define DECELERATION_AVEC_DISTANCE 1.0f //m.s^-2
 
