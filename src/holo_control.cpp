@@ -84,8 +84,8 @@ void HoloControl::update(){
         recalc_vtargets_position_tgt();
         recalc_vtargets_table_to_holo();
         cmd_mode = POSTABLE; // seems stupid, but keep this line, otherwise cmd_mode gets erased to VHOLO
-
-        if (distance(x_table_tgt, y_table_tgt, odom->get_x(), odom->get_y()) < 0.1) {
+        //Sotp if closze to destination
+        if (distance(x_table_tgt, y_table_tgt, odom->get_x(), odom->get_y()) < 0.02) {
             this->stop();
         }
     }

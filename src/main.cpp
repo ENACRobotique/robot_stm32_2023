@@ -5,6 +5,14 @@
 #include "holo_control.h"
 #include "motor_control.h"
 #include "odometry.h"
+#include <Servo.h>
+#include "AX12A.h"
+Servo mainAttrapeDisque;
+Metro pulseBras(10000);
+Metro pulseMain(5000);
+uint8_t countPulseMain=0;
+uint8_t countPulseBras=0;
+DynamixelSerial bras;
 
 Metro odom_refresh(10);
 Metro bruhcmd(1000);
@@ -19,8 +27,6 @@ Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 // MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.5, -200.0, 200.0, 1);
 // MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.5, -200.0, 200.0, 2);
 // MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.5, -200.0, 200.0, 3);
-
-
 MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.0, -200.0, 200.0, 1);
 MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.0, -200.0, 200.0, 2);
 MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.0, -200.0, 200.0, 3);
@@ -39,8 +45,9 @@ float tableau[] = {
 
 void setup() {
     Serial.begin(115200);
+    Serial3.begin(500000);
+    bras.init(&Serial3);
     Serial.println("Démarrage du robot bas niveau v0.2.0");
-
     encoder1.init();
     encoder2.init();
     encoder3.init();
@@ -57,19 +64,32 @@ void setup() {
     odom.init();
     odom_refresh.reset();
     Serial.println("Odométrie initialisée");
-
-    Serial.println("Initialisation terminée");
-
-    holo_control.set_vtarget_table(0.4f, 0.0f, 0.8f);
 }
-
 
 void loop() {
     // if (bruhcmd.check()) {
     //     position = (position + 1) % 4;
     //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // }
+    if (pulseBras.check()){
+        if(!(++countPulseBras%2)){
+            bras.move(5,400);
+            countPulseBras%=2;
+        }
+        else{
+            bras.move(5,830);
+        }
 
+    }
+    if(pulseMain.check()){
+        if(!(++countPulseMain%2)){
+            mainAttrapeDisque.writeMicroseconds(2000);
+        }
+        else{
+            mainAttrapeDisque.writeMicroseconds(1600);
+        }   
+    }
+    
     if (odom_refresh.check()){
         odom.update();
         holo_control.update();
