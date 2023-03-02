@@ -7,6 +7,8 @@
 #include "odometry.h"
 #include <Servo.h>
 #include "AX12A.h"
+#include <AccelStepper.h>
+#include "arm.h"
 Servo mainAttrapeDisque;
 Metro pulseBras(10000);
 Metro pulseMain(10000);
@@ -34,6 +36,9 @@ MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.0, -200.0, 200.0,
 Odometry odom(&encoder1, &encoder2, &encoder3);
 
 HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
+
+AccelStepper lift_stepper = AccelStepper(INTERFACE_DRIVER, STEP_LIFT_STP, STEP_LIFT_DIR);
+ARM arm(&lift_stepper);
 
 int position = 0;
 float tableau[] = {
