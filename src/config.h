@@ -46,12 +46,15 @@
 #define DECELERATION_AVEC_DISTANCE 1.0f //m.s^-2
 
 #define INTERFACE_DRIVER 1
-#define STEP_LIFT_STP PC1
-#define STEP_LIFT_DIR PC0
-#define STEP_PLATE_STP PA10
-#define STEP_PLATE_DIR PA0
+#define STEPPER_1_STP PA10
+#define STEPPER_1_DIR PA0
+#define STEPPER_2_STP PC1
+#define STEPPER_2_DIR PC0
 #define STEP_SPEED 200 // step.s^-1
 #define STEP_ACC 30 //step.s^-2
 #define CM_TO_STEP 1 // À DÉFINIR step.cm^-1
+
+#define FIN_COURSE_1 PA1
+#define FIN_COURSE_2 PA15
 
 #endif // CONFIG_HEADER

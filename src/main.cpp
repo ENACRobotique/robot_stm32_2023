@@ -5,18 +5,12 @@
 #include "holo_control.h"
 #include "motor_control.h"
 #include "odometry.h"
-#include <Servo.h>
-#include "AX12A.h"
-#include <AccelStepper.h>
 #include "arm.h"
-Servo mainAttrapeDisque;
-Metro pulseBras(10000);
-Metro pulseMain(10000);
-uint8_t countPulseMain=0;
-uint8_t countPulseBras=0;
-DynamixelSerial bras;
+
+
 
 Metro odom_refresh(10);
+int bruhCounter=0;
 Metro bruhcmd(1000);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
@@ -37,8 +31,8 @@ Odometry odom(&encoder1, &encoder2, &encoder3);
 
 HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 
-AccelStepper lift_stepper = AccelStepper(INTERFACE_DRIVER, STEP_LIFT_STP, STEP_LIFT_DIR);
-ARM arm(&lift_stepper);
+
+ARM arm(FIN_COURSE_2,2,5);
 
 int position = 0;
 float tableau[] = {
@@ -49,13 +43,10 @@ float tableau[] = {
 };
 
 void setup() {
-    pulseBras.reset();
-    delay(5000);
-    pulseMain.reset();
+    pinMode(LED_BUILTIN,OUTPUT);
     Serial.begin(115200);
     Serial3.begin(500000);
-    bras.init(&Serial3);
-    mainAttrapeDisque.attach(SERVO_1,2000);
+    arm.init(Serial3,1);
     Serial.println("Démarrage du robot bas niveau v0.2.0");
     encoder1.init();
     encoder2.init();
@@ -73,6 +64,7 @@ void setup() {
     odom.init();
     odom_refresh.reset();
     Serial.println("Odométrie initialisée");
+    
 }
 
 void loop() {
@@ -80,26 +72,17 @@ void loop() {
     //     position = (position + 1) % 4;
     //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // }
-    if (pulseBras.check()){
-        if(!(++countPulseBras%2)){
-            bras.move(5,525);
-            countPulseBras%=2;
-        }
-        else{
-            bras.move(5,830);
-        }
-
+    arm.update();
+    if (bruhcmd.check()){
+        digitalToggle(LED_BUILTIN);
+        if (bruhCounter==1){arm.toggleBras(0);}
+        //else if (bruhCounter==2){arm.toggleMain(1);}
+        else if (bruhCounter==3){arm.toggleBras();}
+        else if (bruhCounter==4){arm.toggleElbow(0);}
+        //else if (bruhCounter==5){arm.toggleMain(0);}
+        else if (bruhCounter==6){arm.toggleElbow(1);bruhCounter=-1;}
+        bruhCounter++;
     }
-    if(pulseMain.check()){
-        if(!(++countPulseMain%2)){
-            countPulseMain%=2;
-            mainAttrapeDisque.writeMicroseconds(2000);
-        }
-        else{
-            mainAttrapeDisque.writeMicroseconds(1600);
-        }   
-    }
-    
     if (odom_refresh.check()){
         odom.update();
         holo_control.update();
