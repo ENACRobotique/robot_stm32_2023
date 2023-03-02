@@ -6,9 +6,10 @@
 #include "motor_control.h"
 #include "odometry.h"
 #include "arm.h"
+#include "AX12A.h"
 
 
-
+DynamixelSerial AX12As;
 Metro odom_refresh(10);
 int bruhCounter=0;
 Metro bruhcmd(1000);
@@ -32,7 +33,7 @@ Odometry odom(&encoder1, &encoder2, &encoder3);
 HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 
 
-ARM arm(FIN_COURSE_2,2,5);
+ARM arm(FIN_COURSE_2,2,5,&AX12As);
 
 int position = 0;
 float tableau[] = {
@@ -76,10 +77,10 @@ void loop() {
     if (bruhcmd.check()){
         digitalToggle(LED_BUILTIN);
         if (bruhCounter==1){arm.toggleBras(0);}
-        //else if (bruhCounter==2){arm.toggleMain(1);}
+        else if (bruhCounter==2){arm.toggleMain(1);}
         else if (bruhCounter==3){arm.toggleBras();}
         else if (bruhCounter==4){arm.toggleElbow(0);}
-        //else if (bruhCounter==5){arm.toggleMain(0);}
+        else if (bruhCounter==5){arm.toggleMain(0);}
         else if (bruhCounter==6){arm.toggleElbow(1);bruhCounter=-1;}
         bruhCounter++;
     }

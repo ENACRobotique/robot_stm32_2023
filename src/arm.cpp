@@ -1,10 +1,10 @@
 #include "arm.h"
 
 
-ARM::ARM(int PinFinCourse, int NumStepper, int idAX12){
+ARM::ARM(int PinFinCourse, int NumStepper, int idAX12, DynamixelSerial* AX12){
     this->ID_AX_Bras = idAX12;
     this->pinFinCourse = PinFinCourse;
-    this->AX12A=DynamixelSerial();
+    this->AX12A=AX12;
     this->etatBras = IDLE_BRAS;
     this->etatMain = IDLE_MAIN;
     this->etatAX = IDLE_ELBOW;
@@ -49,7 +49,7 @@ void ARM::init(HardwareSerial serialDynamixel, int numServo){
             while(1){};
     }
     this->actionMain.attach(pinServo,2000);
-    this->AX12A.init(&serialDynamixel);
+    this->AX12A->init(&serialDynamixel);
     this->etatBras = INITIALISATION;
     this->etatMain = UNGRAB;
     this->etatAX = OUTWARDS;
@@ -57,7 +57,7 @@ void ARM::init(HardwareSerial serialDynamixel, int numServo){
     this->lift_stepper.setAcceleration(2000);
     this->lift_stepper.setSpeed(500);
     pinMode(this->pinFinCourse,INPUT_PULLUP);
-    this->AX12A.move(this->ID_AX_Bras,(int)OUTWARDS);
+    this->AX12A->move(this->ID_AX_Bras,(int)OUTWARDS);
 }
 
 void ARM::update(){
@@ -66,7 +66,7 @@ void ARM::update(){
             if (!digitalRead(this->pinFinCourse)){
                 this->etatBras= IDLE_BRAS;
                 this->etatAX=INWARDS;
-                this->AX12A.move(this->ID_AX_Bras,(int)INWARDS);
+                this->AX12A->move(this->ID_AX_Bras,(int)INWARDS);
                 this->lift_stepper.setCurrentPosition(0);
                 this->lift_stepper.setSpeed(0);
             }
@@ -102,15 +102,15 @@ void ARM::toggleBras(int choice){
 void ARM::toggleElbow(int choice){
     switch (choice){
         case 0:
-            //this->AX12A.move((unsigned char)(this->ID_AX_Bras),(int)INWARDS);
+            this->AX12A->move((unsigned char)(this->ID_AX_Bras),(int)INWARDS);
             this->etatAX=INWARDS;
             break;
         case 1:
-            //this->AX12A.move(this->ID_AX_Bras,(int)OUTWARDS);
+            this->AX12A->move(this->ID_AX_Bras,(int)OUTWARDS);
             this->etatAX=OUTWARDS;
             break;
         default:
-            //this->AX12A.move(this->ID_AX_Bras,((this->etatAX)==OUTWARDS)?INWARDS:OUTWARDS);
+            this->AX12A->move(this->ID_AX_Bras,((this->etatAX)==OUTWARDS)?INWARDS:OUTWARDS);
             this->etatAX= ((this->etatAX)==OUTWARDS)?INWARDS:OUTWARDS;
             break;
     }

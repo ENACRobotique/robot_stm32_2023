@@ -28,7 +28,7 @@ typedef enum{
 class ARM
 {
     public :
-        ARM(int PinFinCourse, int NumStepper, int idAX12); // + servo + ax12
+        ARM(int PinFinCourse, int NumStepper, int idAX12,DynamixelSerial* AX12As); // + servo + ax12
         void init(HardwareSerial serialDynamixel, int numServo);
         void toggleBras(int choice = 2); // 0 pour en bas, 1 pour en haut, le reste pour 
                                          //l'endroit où le bras n'est pas.
@@ -40,7 +40,7 @@ class ARM
 
     private:
         AccelStepper lift_stepper;
-        DynamixelSerial AX12A;
+        DynamixelSerial* AX12A;
         Servo actionMain;
         armState_t etatBras;
         elbowState_t etatAX;
