@@ -8,15 +8,14 @@
 #include <AccelStepper.h>
 typedef enum{
     IDLE_ELBOW,
-    INWARDS = 525,
-    OUTWARDS = 830
+    INWARDS = 145,
+    OUTWARDS = 525
 } elbowState_t;
 
 typedef enum{
-    DOWN=-800,
-    UP=-0,
-    IDLE_BRAS,
     INITIALISATION,
+    IDLE_BRAS,
+    DOWN=-800,
 }armState_t;
 
 typedef enum{
@@ -29,7 +28,7 @@ class ARM
 {
     public :
         ARM(int PinFinCourse, int NumStepper, int idAX12,DynamixelSerial* AX12As); // + servo + ax12
-        void init(HardwareSerial serialDynamixel, int numServo);
+        void init(HardwareSerial *serialDynamixel, int numServo);
         void toggleBras(int choice = 2); // 0 pour en bas, 1 pour en haut, le reste pour 
                                          //l'endroit où le bras n'est pas.
         void toggleElbow(int choice = 2);// 0 pour l'intérieur, 1 pour l'extérieur, le 

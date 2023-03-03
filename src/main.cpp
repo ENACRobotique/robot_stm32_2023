@@ -47,7 +47,8 @@ void setup() {
     pinMode(LED_BUILTIN,OUTPUT);
     Serial.begin(115200);
     Serial3.begin(500000);
-    arm.init(Serial3,1);
+    arm.init(&Serial3,1);
+
     Serial.println("Démarrage du robot bas niveau v0.2.0");
     encoder1.init();
     encoder2.init();
@@ -76,12 +77,12 @@ void loop() {
     arm.update();
     if (bruhcmd.check()){
         digitalToggle(LED_BUILTIN);
-        if (bruhCounter==1){arm.toggleBras(0);}
-        else if (bruhCounter==2){arm.toggleMain(1);}
-        else if (bruhCounter==3){arm.toggleBras();}
-        else if (bruhCounter==4){arm.toggleElbow(0);}
-        else if (bruhCounter==5){arm.toggleMain(0);}
-        else if (bruhCounter==6){arm.toggleElbow(1);bruhCounter=-1;}
+        if (bruhCounter==10){arm.toggleBras(0);}
+        else if (bruhCounter==11){arm.toggleMain(1);}
+        else if (bruhCounter==12){arm.toggleBras(1);}
+        else if (bruhCounter==14){arm.toggleElbow(0);}
+        else if (bruhCounter==15){arm.toggleMain(0);}
+        else if (bruhCounter==16){arm.toggleElbow(1);bruhCounter=5;}
         bruhCounter++;
     }
     if (odom_refresh.check()){

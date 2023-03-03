@@ -25,7 +25,7 @@ ARM::ARM(int PinFinCourse, int NumStepper, int idAX12, DynamixelSerial* AX12){
     }
 }
 
-void ARM::init(HardwareSerial serialDynamixel, int numServo){
+void ARM::init(HardwareSerial* serialDynamixel, int numServo){
     this->lift_stepper = AccelStepper (INTERFACE_DRIVER, this->pinSTP, this->pinDIR);
     this->actionMain = Servo();
     int pinServo;
@@ -49,7 +49,7 @@ void ARM::init(HardwareSerial serialDynamixel, int numServo){
             while(1){};
     }
     this->actionMain.attach(pinServo,2000);
-    this->AX12A->init(&serialDynamixel);
+    this->AX12A->init(serialDynamixel);
     this->etatBras = INITIALISATION;
     this->etatMain = UNGRAB;
     this->etatAX = OUTWARDS;
@@ -57,7 +57,6 @@ void ARM::init(HardwareSerial serialDynamixel, int numServo){
     this->lift_stepper.setAcceleration(2000);
     this->lift_stepper.setSpeed(500);
     pinMode(this->pinFinCourse,INPUT_PULLUP);
-    this->AX12A->move(this->ID_AX_Bras,(int)OUTWARDS);
 }
 
 void ARM::update(){
@@ -70,14 +69,12 @@ void ARM::update(){
                 this->lift_stepper.setCurrentPosition(0);
                 this->lift_stepper.setSpeed(0);
             }
-            else{
+            else{;
             this->lift_stepper.runSpeed();
             }
             break;
-        case UP:
-            this->lift_stepper.run();
-            break;
         case DOWN:
+            this->lift_stepper.moveTo((long)DOWN);
             this->lift_stepper.run();
             break;
         case IDLE_BRAS:
@@ -91,12 +88,11 @@ void ARM::toggleBras(int choice){
             this->etatBras=DOWN;
             break;
         case 1:
-            this->lift_stepper.moveTo((long)UP);
-            this->etatBras=UP;
+            this->lift_stepper.setSpeed(700);
+            this->etatBras=INITIALISATION;
             break;
         default:
-            this->lift_stepper.moveTo(((this->etatBras)==UP)?((long)DOWN):((long)UP));
-            this->etatBras= ((this->etatBras)==UP)?DOWN:UP;
+            this->toggleBras(((this->etatBras)==INITIALISATION)?0:1);
     }
 }
 void ARM::toggleElbow(int choice){
