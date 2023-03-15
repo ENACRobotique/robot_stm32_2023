@@ -75,7 +75,7 @@ void loop() {
     //     position = (position + 1) % 4;
     //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // }
-    // arm.update();
+    arm.update();
     // if (bruhcmd.check()){
     //     digitalToggle(LED_BUILTIN);
     //     if (bruhCounter==10){arm.toggleBras(0);}

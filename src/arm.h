@@ -21,8 +21,8 @@ typedef enum{
 
 typedef enum{
     IDLE_MAIN,
-    GRAB=200,
-    UNGRAB=500
+    UNGRAB=200,
+    GRAB=500
 }handState_t;
 
 class ARM
