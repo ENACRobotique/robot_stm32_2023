@@ -41,9 +41,16 @@
 
 #define MAX_ACCEL 2.0f //m.s^2
 
-#define MAX_VITESSE 0.8f //m.s^-1
-#define MAX_VITESSE_ROTATION 0.4f //rad.s^-1
-#define DECELERATION_AVEC_DISTANCE 1.0f //m.s^-2
+
+#define SEUIL_PROCHE 0.3f //m
+#define MAX_VITESSE 0.7f //m.s^-1
+#define MAX_VITESSE_PROCHE 0.25f //m.s^-1
+#define TOL_DIST 0.02 //m
+
+#define SEUIL_PROCHE_ROTATION 0.2f //rad
+#define TOL_THETA 0.01 //rad
+#define COEF_DAMP_THETA 1.0f 
+#define MAX_VITESSE_ROTATION 0.8f //rad.s^-1
 
 #define INTERFACE_DRIVER 1
 #define STEPPER_1_STP PA10

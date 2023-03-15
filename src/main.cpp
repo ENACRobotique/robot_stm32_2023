@@ -67,6 +67,7 @@ void setup() {
     odom_refresh.reset();
     Serial.println("Odométrie initialisée");
     
+    holo_control.set_ptarget(2.f, 0.f, 90.f * DEG_TO_RAD);
 }
 
 void loop() {
@@ -74,17 +75,17 @@ void loop() {
     //     position = (position + 1) % 4;
     //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // }
-    arm.update();
-    if (bruhcmd.check()){
-        digitalToggle(LED_BUILTIN);
-        if (bruhCounter==10){arm.toggleBras(0);}
-        else if (bruhCounter==11){arm.toggleMain(1);}
-        else if (bruhCounter==12){arm.toggleBras(1);}
-        else if (bruhCounter==14){arm.toggleElbow(0);}
-        else if (bruhCounter==15){arm.toggleMain(0);}
-        else if (bruhCounter==16){arm.toggleElbow(1);bruhCounter=5;}
-        bruhCounter++;
-    }
+    // arm.update();
+    // if (bruhcmd.check()){
+    //     digitalToggle(LED_BUILTIN);
+    //     if (bruhCounter==10){arm.toggleBras(0);}
+    //     else if (bruhCounter==11){arm.toggleMain(1);}
+    //     else if (bruhCounter==12){arm.toggleBras(1);}
+    //     else if (bruhCounter==14){arm.toggleElbow(0);}
+    //     else if (bruhCounter==15){arm.toggleMain(0);}
+    //     else if (bruhCounter==16){arm.toggleElbow(1);bruhCounter=5;}
+    //     bruhCounter++;
+    // }
     if (odom_refresh.check()){
         odom.update();
         holo_control.update();

@@ -57,13 +57,18 @@ void HoloControl::recalc_vtargets_position_tgt(){
     float dy = y_table_tgt - current_y;
     float dtheta = theta_tgt - current_theta;
 
-    float vx_table = clamp(-dx * DECELERATION_AVEC_DISTANCE, dx * DECELERATION_AVEC_DISTANCE, ((dx>0)?1:-1) * MAX_VITESSE);
-    float vy_table = clamp(-dy * DECELERATION_AVEC_DISTANCE, dy * DECELERATION_AVEC_DISTANCE, ((dy>0)?1:-1) * MAX_VITESSE);
-    //the two speeds above should be normalised so that the total speed is <= MAX_VITESSE, but I'm lazy and tired so maybe later
-    float vtheta = clamp(-dtheta * DECELERATION_AVEC_DISTANCE, dtheta * DECELERATION_AVEC_DISTANCE, ((dtheta>0)?1:-1) * MAX_VITESSE_ROTATION);
+
+    float dist = distance(x_table_tgt, y_table_tgt, current_x, current_y);
+    float target_speed = (dist>SEUIL_PROCHE? MAX_VITESSE: (dist < 0.02? 0 : MAX_VITESSE_PROCHE));
+    float vx_table = dx / dist * target_speed;
+    float vy_table = dy / dist * target_speed;
+
+    float vtheta = dtheta>TOL_THETA? MAX_VITESSE_ROTATION * ((dtheta>0)?1:-1): 0;
+
     this->set_vtarget_table(vx_table, vy_table, vtheta);
     cmd_mode = POSTABLE;
 }
+
 
 void HoloControl::set_ptarget(float x, float y, float theta){
     x_table_tgt = x;
@@ -85,7 +90,7 @@ void HoloControl::update(){
         recalc_vtargets_table_to_holo();
         cmd_mode = POSTABLE; // seems stupid, but keep this line, otherwise cmd_mode gets erased to VHOLO
         //Sotp if closze to destination
-        if (distance(x_table_tgt, y_table_tgt, odom->get_x(), odom->get_y()) < 0.02) {
+        if (distance(x_table_tgt, y_table_tgt, odom->get_x(), odom->get_y()) < TOL_DIST && abs(theta_tgt - odom->get_theta()) < TOL_THETA) {
             this->stop();
         }
     }
