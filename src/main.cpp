@@ -33,7 +33,7 @@ Odometry odom(&encoder1, &encoder2, &encoder3);
 HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 
 
-ARM arm(FIN_COURSE_2,2,5,&AX12As);
+ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
 
 int position = 0;
 float tableau[] = {
@@ -47,7 +47,7 @@ void setup() {
     pinMode(LED_BUILTIN,OUTPUT);
     Serial.begin(115200);
     Serial3.begin(500000);
-    arm.init(&Serial3,1);
+    arm.init(&Serial3);
 
     Serial.println("Démarrage du robot bas niveau v0.2.0");
     encoder1.init();
