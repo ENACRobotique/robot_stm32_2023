@@ -37,13 +37,13 @@
 #define ANGLE_M1 0.0
 #define ANGLE_M2 2*PI/3
 #define ANGLE_M3 -2*PI/3
-#define RAYON 0.115
+#define RAYON 0.105 //old: 0.115
 
 #define MAX_ACCEL 2.0f //m.s^2
 
 
 #define SEUIL_PROCHE 0.3f //m
-#define MAX_VITESSE 0.7f //m.s^-1
+#define MAX_VITESSE 0.65f //m.s^-1
 #define MAX_VITESSE_PROCHE 0.25f //m.s^-1
 #define TOL_DIST 0.02 //m
 
