@@ -1,11 +1,13 @@
-#ifndef ARM_H
-#define ARM_H
+#ifndef TRIEUSE_H
+#define TRIEUSE_H
 
 #include "config.h"
 #include <AccelStepper.h>
 #include "AX12A.h"
 #include <Servo.h>
 #include <AccelStepper.h>
+
+//bras
 typedef enum{
     IDLE_ELBOW,
     INWARDS = 145,
@@ -24,6 +26,25 @@ typedef enum{
     UNGRAB=200,
     GRAB=500
 }handState_t;
+
+//plateau
+typedef enum 
+{
+    INIT = -1,  // 
+    ONE = 60,   //1
+    TWO = 120,  //2
+    THREE = 180,//3
+    FOUR = 240, //4
+    FIVE = 300, //5
+    SIX = 360,  //6
+
+}plate_pos;
+
+//griffes
+int openLpos = 2000;
+int openRpos = 1000;
+int closedLpos = 1100;
+int closedRpos = 1830;
 
 class ARM
 {
@@ -52,5 +73,37 @@ class ARM
 
 };
 
+class PLATE
+{
+    public :
+        PLATE(int num_stepper, int pin_zero); // stepper + fin de course
+        void init();
+        void update(int position); // rotation a sens unique
+    
+    private :
+        AccelStepper _plate_stepper;
+        int _pin_zero;      
+        int _num_stepper;
+        int _pin_STP;
+        int _pin_DIR;
+        int _position;
+
+};
+
+class CLAW
+{
+    public:
+        CLAW(int pin_servo_gauche, int pin_servo_droite);
+        void init();
+        void update(bool state);
+    
+    private:
+        Servo _Servo_Gauche;
+        Servo _Servo_Droite;
+        int _pin_servo_gauche;
+        int _pin_servo_droite;
+        bool _state;
+
+};
 
 #endif
