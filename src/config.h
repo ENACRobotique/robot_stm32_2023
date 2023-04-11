@@ -37,7 +37,7 @@
 #define ANGLE_M1 0.0
 #define ANGLE_M2 2*PI/3
 #define ANGLE_M3 -2*PI/3
-#define RAYON 0.105 //old: 0.115
+#define RAYON 0.145 //old: 0.115
 
 #define MAX_ACCEL 2.0f //m.s^2
 
@@ -58,11 +58,13 @@
 #define STEPPER_2_STP PC1
 #define STEPPER_2_DIR PC0
 #define STEP_MAX_SPEED 2000 // step.s^-1
-#define STEP_SPEED 400 // step.s^-1
-#define STEP_ACC 4000 //step.s^-2
+#define STEP_SPEED 2000 // step.s^-1
+#define STEP_ACC 2000 //step.s^-2
 #define CM_TO_STEP 1 // À DÉFINIR step.cm^-1
 
 #define FIN_COURSE_1 PA1
 #define FIN_COURSE_2 PA15
+
+#define DEG_TO_STEP 4.44f
 
 #endif // CONFIG_HEADER

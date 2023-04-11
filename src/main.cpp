@@ -13,6 +13,7 @@ DynamixelSerial AX12As;
 Metro odom_refresh(10);
 int bruhCounter=0;
 Metro bruhcmd(1000);
+Metro lazytimer(3000);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
     //les autres tournent dans le sens trigo pour les valeurs positives
@@ -36,7 +37,7 @@ HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 //ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
 PLATE plateau(1,FIN_COURSE_2);
 
-
+int pos;
 int position = 0;
 float tableau[] = {
     0.5,
@@ -72,6 +73,8 @@ void setup() {
     Serial.println("Odométrie initialisée");
     
     holo_control.set_ptarget(2.f, 0.f, 90.f * DEG_TO_RAD);
+    pos = 0;
+
 }
 
 void loop() {
@@ -80,20 +83,15 @@ void loop() {
     //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // }
     //arm.update();
-    plateau.update(SIX);
-    delay(1000);
-    plateau.update(ONE);
-    delay(1000);
-    plateau.update(TWO);
-    delay(1000);
-    plateau.update(THREE);
-    delay(1000);
-    plateau.update(FOUR);
-    delay(1000);
-    plateau.update(FIVE);
-    delay(1000);
-    plateau.update(SIX);
-    delay(1000);
+    plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
+    if (lazytimer.check())
+    {
+        digitalToggle(LED_BUILTIN);
+        pos+=1;
+    }
+    plateau.update(cmd[pos%6]);
+
+
     // if (bruhcmd.check()){
     //     digitalToggle(LED_BUILTIN);
     //     if (bruhCounter==10){arm.toggleBras(0);}

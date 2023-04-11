@@ -7,6 +7,7 @@
 #include <Servo.h>
 #include <AccelStepper.h>
 
+
 //bras
 typedef enum{
     IDLE_ELBOW,
@@ -30,15 +31,29 @@ typedef enum{
 //plateau
 typedef enum 
 {
-    PLATE_INIT = -1,  // 
-    ONE = 60,   //1
-    TWO = 120,  //2
-    THREE = 180,//3
-    FOUR = 240, //4
-    FIVE = 300, //5
-    SIX = 360,  //6
+    PLATE_INIT = -1,
+    POS_ONE = 0,
+    POS_TWO,
+    POS_THREE,
+    POS_FOUR,
+    POS_FIVE,
+    POS_SIX,
 
 }plate_pos;
+
+// typedef enum 
+// {
+//     PLATE_INIT = -1,  // 
+//     STEPPER_POS_ONE = 60,   //1
+//     STEPPER_POS_TWO = 120,  //2
+//     STEPPER_POS_THREE = 180,//3
+//     STEPPER_POS_FOUR = 240, //4
+//     STEPPER_POS_FIVE = 300, //5
+//     STEPPER_POS_SIX = 360,  //6
+
+// }plate_stepper_pos;
+
+extern long stepper_pos[6];
 
 //griffes
 typedef enum 
@@ -82,7 +97,7 @@ class PLATE
     public :
         PLATE(int num_stepper, int pin_zero); // stepper + fin de course
         void init();
-        void update(int position); // rotation a sens unique
+        void update(plate_pos position); // rotation a sens unique
     
     private :
         AccelStepper _plate_stepper;

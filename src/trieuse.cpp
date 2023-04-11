@@ -1,5 +1,8 @@
 #include "trieuse.h"
 
+
+long stepper_pos[6] = {60, 120, 180, 240, 300, 360};
+
 //############# BRAS #############
 
 ARM::ARM(int PinFinCourse, int NumStepper, int idAX12Elbow, int idAX12Main, DynamixelSerial* AX12){
@@ -146,9 +149,9 @@ void PLATE::init()
 
 }
 
-void PLATE::update(int position)
+void PLATE::update(plate_pos position)
 {
-    switch(this->_position)
+    switch(position)
     {
         case PLATE_INIT:
             if(!digitalRead(this->_pin_zero))
@@ -159,35 +162,24 @@ void PLATE::update(int position)
             else {this->_plate_stepper.runSpeed();};
             
             break;
-
-        default:
-            this->_plate_stepper.moveTo(0);
-            this->_plate_stepper.run();
-        
-        case 1:
-            this->_plate_stepper.moveTo(ONE);
-            this->_plate_stepper.run();
-            break;
-        case 2:
-            this->_plate_stepper.moveTo(TWO);
-            this->_plate_stepper.run();
-            break;
-        case 3:
-            this->_plate_stepper.moveTo(THREE);
-            this->_plate_stepper.run();
-            break;
-        case 4:
-            this->_plate_stepper.moveTo(FOUR);
+        case POS_ONE:
+        case POS_TWO:
+        case POS_THREE:
+        case POS_FOUR:
+        case POS_FIVE:
+        case POS_SIX:
+            long target = stepper_pos[position] * DEG_TO_STEP;
+            while(abs(target - this->_plate_stepper.currentPosition()) > 180*DEG_TO_STEP) {
+                if(target - this->_plate_stepper.currentPosition() > 0) {
+                    target -= DEG_TO_STEP*360;
+                } else {
+                    target += DEG_TO_STEP*360;
+                }
+            }
+            this->_plate_stepper.moveTo(target);
+            
             this->_plate_stepper.run();
             break;
-        case 5:
-            this->_plate_stepper.moveTo(FIVE);
-            this->_plate_stepper.run();
-            break;
-        case 6:
-            this->_plate_stepper.moveTo(SIX);
-            this->_plate_stepper.run();
-            break;        
     }
 }
 
