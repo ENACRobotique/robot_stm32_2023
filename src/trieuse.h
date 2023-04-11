@@ -41,10 +41,14 @@ typedef enum
 }plate_pos;
 
 //griffes
-int openLpos = 2000;
-int openRpos = 1000;
-int closedLpos = 1100;
-int closedRpos = 1830;
+typedef enum 
+{
+    OPEN_L_POS = 2000,
+    OPEN_R_POS= 1000,
+    CLOSED_L_POS = 1100,
+    CLOSED_R_POS = 1830,
+
+}claw_pos;
 
 class ARM
 {
