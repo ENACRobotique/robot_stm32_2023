@@ -33,7 +33,9 @@ Odometry odom(&encoder1, &encoder2, &encoder3);
 HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 
 
-ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
+//ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
+PLATE plateau(1,FIN_COURSE_2);
+
 
 int position = 0;
 float tableau[] = {
@@ -47,7 +49,9 @@ void setup() {
     pinMode(LED_BUILTIN,OUTPUT);
     Serial.begin(115200);
     Serial3.begin(500000);
-    arm.init(&Serial3);
+    //arm.init(&Serial3);
+    plateau.init();
+    plateau.update(PLATE_INIT);
 
     Serial.println("Démarrage du robot bas niveau v0.2.0");
     encoder1.init();
@@ -75,7 +79,21 @@ void loop() {
     //     position = (position + 1) % 4;
     //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // }
-    arm.update();
+    //arm.update();
+    plateau.update(SIX);
+    delay(1000);
+    plateau.update(ONE);
+    delay(1000);
+    plateau.update(TWO);
+    delay(1000);
+    plateau.update(THREE);
+    delay(1000);
+    plateau.update(FOUR);
+    delay(1000);
+    plateau.update(FIVE);
+    delay(1000);
+    plateau.update(SIX);
+    delay(1000);
     // if (bruhcmd.check()){
     //     digitalToggle(LED_BUILTIN);
     //     if (bruhCounter==10){arm.toggleBras(0);}
@@ -86,29 +104,29 @@ void loop() {
     //     else if (bruhCounter==16){arm.toggleElbow(1);bruhCounter=5;}
     //     bruhCounter++;
     // }
-    if (odom_refresh.check()){
-        odom.update();
-        holo_control.update();
-        Serial.print( "(vx: " );
-        Serial.print(odom.get_vx() );
-        Serial.print( ", vy: " );
-        Serial.print(odom.get_vy() );
-        Serial.print( ") " );
+    // if (odom_refresh.check()){
+    //     odom.update();
+    //     holo_control.update();
+    //     Serial.print( "(vx: " );
+    //     Serial.print(odom.get_vx() );
+    //     Serial.print( ", vy: " );
+    //     Serial.print(odom.get_vy() );
+    //     Serial.print( ") " );
 
-        Serial.print( "(x: " );
-        Serial.print(odom.get_x() );
-        Serial.print( ", y: " );
-        Serial.print(odom.get_y() );
-        Serial.print( ", theta: " );
-        Serial.print(odom.get_theta() );
-        Serial.println( ")" );
+    //     Serial.print( "(x: " );
+    //     Serial.print(odom.get_x() );
+    //     Serial.print( ", y: " );
+    //     Serial.print(odom.get_y() );
+    //     Serial.print( ", theta: " );
+    //     Serial.print(odom.get_theta() );
+    //     Serial.println( ")" );
 
-        // Serial.print(motor2.get_target_speed());
-        // Serial.print(" ");
-        // Serial.print(motor2.get_ramped_target_speed());
-        // Serial.print(" ");
-        // Serial.println(odom.get_v2speed());
-    }
+    //     // Serial.print(motor2.get_target_speed());
+    //     // Serial.print(" ");
+    //     // Serial.print(motor2.get_ramped_target_speed());
+    //     // Serial.print(" ");
+    //     // Serial.println(odom.get_v2speed());
+    // }
 
     
 }

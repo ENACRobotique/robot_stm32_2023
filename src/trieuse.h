@@ -30,7 +30,7 @@ typedef enum{
 //plateau
 typedef enum 
 {
-    INIT = -1,  // 
+    PLATE_INIT = -1,  // 
     ONE = 60,   //1
     TWO = 120,  //2
     THREE = 180,//3

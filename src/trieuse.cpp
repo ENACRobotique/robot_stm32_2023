@@ -150,7 +150,7 @@ void PLATE::update(int position)
 {
     switch(this->_position)
     {
-        case INIT:
+        case PLATE_INIT:
             if(!digitalRead(this->_pin_zero))
             {
                 this->_plate_stepper.setSpeed(0);
