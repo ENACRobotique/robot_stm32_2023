@@ -41,6 +41,10 @@ HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
 //PLATE plateau(1,FIN_COURSE_2);
 
+//definition des pinces :
+CLAW pince(SERVO_3, SERVO_1);
+bool state = 0;
+
 int pos;
 int position = 0;
 float tableau[] = {
@@ -84,32 +88,38 @@ void setup() {
     holo_control.set_ptarget(0.5, 0.f, 90.f * DEG_TO_RAD);
     pos = 0;
 
+    //setup pinces 
+    pince.init();
+    pince.update(0);
+    
 }
 
 void loop() {
-    if (digitalRead(TIRETTE)){//si la tirette est là
-        colorIsGreen = digitalRead(COLOR);
-        if (!digitalRead(POS_BUTTON)){
-            buttonPressed = 1;
-        }
-        else if (buttonPressed){
-            buttonPressed=0;
-            positionDepart %=5;
-            positionDepart++;
-        }
-        afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
-    }
-    // if (bruhcmd.check()) {
-    //     position = (position + 1) % 4;
-    //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
+    // if (digitalRead(TIRETTE)){//si la tirette est là
+    //     colorIsGreen = digitalRead(COLOR);
+    //     if (!digitalRead(POS_BUTTON)){
+    //         buttonPressed = 1;
+    //     }
+    //     else if (buttonPressed){
+    //         buttonPressed=0;
+    //         positionDepart %=5;
+    //         positionDepart++;
+    //     }
+    //     afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
     // }
-    //arm.update();
-    plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
-    if (lazytimer.check())
+    // // if (bruhcmd.check()) {
+    // //     position = (position + 1) % 4;
+    // //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
+    // // }
+    // //arm.update();
+    // plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
+    if (bruhcmd.check())
     {
         digitalToggle(LED_BUILTIN);
-        pos+=1;
+        pince.update(state);
+        state = !state;
     }
+// 
     //plateau.update(cmd[pos%6]);
 
 
