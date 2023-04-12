@@ -197,6 +197,24 @@ void CLAW::init()
     this->_Servo_Droite.attach(_pin_servo_droite);
 }
 
+void CLAW::update(bool state)
+{
+    if(state)  // si l'état est 1 on ouvre les pinces
+    {
+        int angL_val = map(OPEN_L_POS-300,OPEN_L_POS,CLOSED_L_POS,0,60);
+        int angR_val = map(OPEN_R_POS-300,OPEN_R_POS,CLOSED_R_POS,0,60);
+        _Servo_Gauche.write(angL_val);
+        _Servo_Droite.write(-angR_val);
+    }
+
+    if(!state)  //si l'état est 0 on ferme les pinces
+    {
+        int angL_val = map(CLOSED_L_POS,OPEN_L_POS,CLOSED_L_POS,0,60);
+        int angR_val = map(CLOSED_R_POS,OPEN_R_POS,CLOSED_R_POS,0,60);
+        _Servo_Gauche.write(angL_val);
+        _Servo_Droite.write(-angR_val); 
+    }
+}
 
 
 //############# TRIEUSE #############

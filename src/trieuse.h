@@ -58,12 +58,13 @@ extern long stepper_pos[6];
 //griffes
 typedef enum 
 {
-    OPEN_L_POS = 2000,
-    OPEN_R_POS= 1000,
-    CLOSED_L_POS = 1100,
-    CLOSED_R_POS = 1830,
+    OPEN_L_POS = 1800,
+    OPEN_R_POS = 1870,
+    CLOSED_L_POS = 1110,
+    CLOSED_R_POS = 1015,
 
 }claw_pos;
+
 
 class ARM
 {
