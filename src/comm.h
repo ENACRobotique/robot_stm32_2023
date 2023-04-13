@@ -37,7 +37,7 @@ public:
     void reportActionFinsihed(uint8_t actionNumber);    //sends message indicating that an action ended
     void reportPosition();                              //sends position (x, y, theta) to raspy
     void reportSpeed();                                 //sends speeds (Vx, Vy, Vtheta) to raspy
-    void sendMessage (char* message, int size);         //sends debug Message
+    void sendMessage (char* message, int size);         //send debug Message
 
 private:
     //Attributs
@@ -54,10 +54,9 @@ private:
     // méthodes privées
     void setType(char c);
     void execCommand();
-    void cmdStop();
-    void resetPosition();
-    void cmdActionneurDisplay();
     void cmdPos();
+    void resetPosition();
+    void cmdStop();
     void cmdSlow();
     void cmdclaw();
     void cmdGrab();

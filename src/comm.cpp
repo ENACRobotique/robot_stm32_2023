@@ -39,7 +39,7 @@ void Comm::cmdStop(){// Stops the robot
         SerialCom.println("M Stopping robot.");
 }
 
-//
+// Recale le robot sur la postion déduite du lidar
 void Comm::resetPosition(){
     char *x_addr,*y_addr,*theta_addr;
     uint16_t x,y,theta;
@@ -48,11 +48,14 @@ void Comm::resetPosition(){
     theta_addr = buffer +5;
     x = *x_addr;
     y = *y_addr;
-    theta = *theta_addr;   
+    theta = *theta_addr;
+    odom.set_x(x);
+    odom.set_y(y);
+    odom.set_theta(theta);   
 }
 
-//Affiche nombre donné dans message
-void Comm::cmdActionneurDisplay(){
+// Affiche nombre donné dans message
+void Comm::cmdScore(){
     afficheur.setNbDisplayed(*((uint8_t*)(buffer+1)));
 }
 
@@ -179,6 +182,39 @@ void Comm::setType(char c){
             break;
         default:
             this->etatRadio = IDLE;
+            break;
+    }
+}
+
+//executes valid received order that is in buffer
+void Comm::execCommand(){
+    switch(typeReception){
+        case TYPE_POS:
+            break;
+        case TYPE_RESET_POS:
+            this->resetPosition();
+            break;
+        case TYPE_STOP:
+            this->cmdStop();
+            break;
+        case TYPE_SLOW:
+            break;
+        case TYPE_CLAWS:
+            break;
+        case TYPE_GRAB_DISKS:
+            break;
+        case TYPE_DROP_DISK:
+            break;
+        case TYPE_TURBINE:
+            break;
+        case TYPE_ACTIVATE_COSTUME:
+            break;
+        case TYPE_DROP_CHERRY_SLIDE:
+            break;
+        case TYPE_DISPLAY_POINTS:
+            this->cmdScore();
+            break;
+        case TYPE_RESUME:
             break;
     }
 }
