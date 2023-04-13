@@ -62,7 +62,7 @@ void Comm::reportStart(){
     char *message = "\n\nTc";//start + type + checkSum
     message[3] = message[2] + this->PROTOCOL_VERSION;//calcul de la checksum
     for (int i=0;i<2;i++){
-        SerialCom.write(message,4);
+        SerialCom.write(message,4);//doublé pour redondance
     }
     SerialCom.println("\n\nM Début match !");
 }
@@ -136,9 +136,11 @@ void Comm::setType(char c){
 
 void Comm::update()
 {    
+    char lastRead = 'P';//N'importe quoi sauf un \n pourrait aller, le choix de la lettre P est totalement arbitraire
+    char c;
+    uint8_t sum;
     switch(this->etatRadio){
     case IDLE:
-        char lastRead = 'P';//N'importe quoi sauf un \n pourrait aller, le choix de la lettre P est totalement arbitraire
         while (SerialCom.available() && lastRead != '\n'){
             lastRead = SerialCom.read(); //boucle pour vider le buffer du Serial s'il se remplit de caractères à la con
         }
@@ -153,14 +155,14 @@ void Comm::update()
         break;
     case WAITING_TYPE:
         if (SerialCom.available()){
-            char c = SerialCom.read();
+            c = SerialCom.read();
             buffer[0]=c;
             this->setType(c);
         }
         break;
     case WAITING_REST_OF_MESSAGE:
         if (SerialCom.available() >= this->numberOfExpectedBytes){
-            uint8_t sum = buffer[0]+this->PROTOCOL_VERSION;
+            sum = buffer[0]+this->PROTOCOL_VERSION;
             for (int i=1; i < this->numberOfExpectedBytes+1; i++){
                 buffer[i] = SerialCom.read();
                 sum += buffer[i];
