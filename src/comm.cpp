@@ -61,7 +61,7 @@ void Comm::cmdScore(){
 
 //Send arbitrary string for debug purposes
 void Comm::sendMessage (char* message, int size){
-    SerialCom.write("M",1);
+    SerialCom.write("\n\nM",3);
     SerialCom.write(message,size);
     SerialCom.write("\n",1);
 }

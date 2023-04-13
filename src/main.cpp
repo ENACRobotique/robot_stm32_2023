@@ -8,6 +8,7 @@
 #include "trieuse.h"
 #include "AX12A.h"
 #include "DisplayController.h"
+#include "comm.h"
 
 DisplayController afficheur = DisplayController();
 DynamixelSerial AX12As;
@@ -38,6 +39,7 @@ Odometry odom(&encoder1, &encoder2, &encoder3);
 
 HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 
+Comm radio;
 
 ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
 PLATE plateau(1,FIN_COURSE_2);
@@ -67,24 +69,23 @@ void setup() {
     arm.init(&Serial3);
     plateau.init();
     plateau.update(PLATE_INIT);
-
-    Serial.println("Démarrage du robot bas niveau v0.2.0");
+    radio.sendMessage("Démarrage du robot bas niveau v0.2.0",37);
     encoder1.init();
     encoder2.init();
     encoder3.init();
-    Serial.println("Encodeurs initialisés");
+    radio.sendMessage("Encodeurs initialisés",22);
 
     motor1.init();
     motor2.init();
     motor3.init();
-    Serial.println("Moteurs initialisés");
+    radio.sendMessage("Moteurs initialisés",20);
 
     holo_control.stop();
-    Serial.println("Robot à l'arrêt");
+    radio.sendMessage("Robot à l'arrêt",17);
 
     odom.init();
     odom_refresh.reset();
-    Serial.println("Odométrie initialisée");
+    radio.sendMessage("Odométrie initialisée",23);
     
     holo_control.set_ptarget(0.5, 0.f, 0);
     pos = 0;

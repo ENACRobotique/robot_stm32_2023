@@ -31,7 +31,7 @@ typedef enum {
 
 class Comm
 {
-public:
+public: 
     void update();                                      //call that in loop to read messages
     void reportStart();                                 //sends Start Of Match signal to raspy
     void reportActionFinsihed(uint8_t actionNumber);    //sends message indicating that an action ended
@@ -68,4 +68,4 @@ private:
     void cmdResume();
 };
 extern Comm radio;
-#endif
+#endif // COMM_H
