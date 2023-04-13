@@ -14,6 +14,7 @@ DynamixelSerial AX12As;
 Metro odom_refresh(10);
 int bruhCounter=0;
 int buttonPressed;
+uint32_t lastPressedTimeStamp;
 int positionDepart=1;
 int colorIsGreen;
 Metro bruhcmd(1000);
@@ -39,7 +40,7 @@ HoloControl holo_control(&motor1, &motor2, &motor3, &odom);
 
 
 ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
-//PLATE plateau(1,FIN_COURSE_2);
+PLATE plateau(1,FIN_COURSE_2);
 
 //definition des pinces :
 CLAW pince(SERVO_3, SERVO_1);
@@ -64,8 +65,8 @@ void setup() {
     Serial.begin(115200);
     Serial3.begin(500000);
     arm.init(&Serial3);
-    //plateau.init();
-    //plateau.update(PLATE_INIT);
+    plateau.init();
+    plateau.update(PLATE_INIT);
 
     Serial.println("Démarrage du robot bas niveau v0.2.0");
     encoder1.init();
@@ -95,32 +96,34 @@ void setup() {
 }
 
 void loop() {
-    // if (digitalRead(TIRETTE)){//si la tirette est là
-    //     colorIsGreen = digitalRead(COLOR);
-    //     if (!digitalRead(POS_BUTTON)){
-    //         buttonPressed = 1;
-    //     }
-    //     else if (buttonPressed){
-    //         buttonPressed=0;
-    //         positionDepart %=5;
-    //         positionDepart++;
-    //     }
-    //     afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
-    // }
+    if (digitalRead(TIRETTE)){//si la tirette est là
+        colorIsGreen = digitalRead(COLOR);
+        if (!digitalRead(POS_BUTTON)){
+            buttonPressed = 1;
+            lastPressedTimeStamp = millis();
+        }
+        else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
+            buttonPressed=0;
+            positionDepart %=5;
+            positionDepart++;
+            afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
+        }
+    }
     // // if (bruhcmd.check()) {
     // //     position = (position + 1) % 4;
     // //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // // }
-    // //arm.update();
-    // plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
+    arm.update();
+    plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
     if (bruhcmd.check())
     {
         digitalToggle(LED_BUILTIN);
         pince.update(state);
         state = !state;
+        pos++;
     }
 // 
-    //plateau.update(cmd[pos%6]);
+    plateau.update(cmd[pos%6]);
 
 
     // if (bruhcmd.check()){
