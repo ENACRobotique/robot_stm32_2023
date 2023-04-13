@@ -58,12 +58,21 @@ extern long stepper_pos[6];
 //griffes
 typedef enum 
 {
-    OPEN_L_POS = 1800,
-    OPEN_R_POS = 1870,
-    CLOSED_L_POS = 1110,
-    CLOSED_R_POS = 1015,
+    OPEN_L_POS = 1850,
+    OPEN_R_POS = 1000,
+    CLOSED_L_POS = 1080,
+    CLOSED_R_POS = 1900,
+    GRAB_L = 1500,
+    GRAB_R = 1400,
 
 }claw_pos;
+
+typedef enum
+{
+    CLAW_CLOSED = 0,
+    CLAW_OPEN = 1,
+    CLAW_GRAB = 2,
+}claw_state;
 
 
 class ARM
@@ -115,7 +124,7 @@ class CLAW
     public:
         CLAW(int pin_servo_gauche, int pin_servo_droite);
         void init();
-        void update(bool state);
+        void update(claw_state state);
     
     private:
         Servo _Servo_Gauche;

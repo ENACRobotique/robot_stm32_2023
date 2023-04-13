@@ -43,8 +43,8 @@ ARM arm(FIN_COURSE_2,2,5,4,&AX12As);
 PLATE plateau(1,FIN_COURSE_2);
 
 //definition des pinces :
-CLAW pince(SERVO_3, SERVO_1);
-bool state = 0;
+CLAW pince(SERVO_2, SERVO_1);
+claw_state state[3] = {CLAW_CLOSED,CLAW_OPEN,CLAW_GRAB};
 
 int pos;
 int position = 0;
@@ -91,7 +91,7 @@ void setup() {
 
     //setup pinces 
     pince.init();
-    pince.update(0);
+    pince.update(CLAW_CLOSED);
     
 }
 
@@ -114,16 +114,15 @@ void loop() {
     // //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // // }
     arm.update();
+
     plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
-    if (bruhcmd.check())
+    if (lazytimer.check())
     {
         digitalToggle(LED_BUILTIN);
-        pince.update(state);
-        state = !state;
         pos++;
     }
-// 
-    plateau.update(cmd[pos%6]);
+    pince.update(state[pos%3]);
+    //plateau.update(cmd[pos%6]);
 
 
     // if (bruhcmd.check()){
