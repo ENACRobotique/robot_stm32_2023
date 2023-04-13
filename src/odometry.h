@@ -71,5 +71,5 @@ class Odometry{
         const Eigen::Matrix3d motors_to_axis = axis_to_motors.inverse();
 };
 
-
+extern Odometry odom;
 #endif //ODOMETRY_H

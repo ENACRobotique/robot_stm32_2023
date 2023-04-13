@@ -41,5 +41,5 @@ class HoloControl{
         void recalc_vtargets_table_to_holo();
         void recalc_vtargets_position_tgt();
 };
-
+extern HoloControl holo_control ;
 #endif // HOLO_CONTROL_H

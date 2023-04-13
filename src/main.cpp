@@ -86,7 +86,7 @@ void setup() {
     odom_refresh.reset();
     Serial.println("Odométrie initialisée");
     
-    holo_control.set_ptarget(0.5, 0.f, 90.f * DEG_TO_RAD);
+    holo_control.set_ptarget(0.5, 0.f, 0);
     pos = 0;
 
     //setup pinces 
@@ -109,10 +109,10 @@ void loop() {
             afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
         }
     }
-    // // if (bruhcmd.check()) {
-    // //     position = (position + 1) % 4;
-    // //     holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
-    // // }
+    if (bruhcmd.check()) {
+    position = (position + 1) % 4;
+    holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
+    }
     arm.update();
 
     plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
@@ -121,11 +121,10 @@ void loop() {
         digitalToggle(LED_BUILTIN);
         pos++;
     }
-    pince.update(state[pos%3]);
     //plateau.update(cmd[pos%6]);
 
 
-    // if (bruhcmd.check()){
+    // if (bruhcmd.check()){ 
     //     digitalToggle(LED_BUILTIN);
     //     if (bruhCounter==10){arm.toggleBras(0);}
     //     else if (bruhCounter==11){arm.toggleMain(1);}
@@ -135,28 +134,30 @@ void loop() {
     //     else if (bruhCounter==16){arm.toggleElbow(1);bruhCounter=5;}
     //     bruhCounter++;
     // }
-    //  if (odom_refresh.check())
-    //  {
-    //      odom.update();
-    //      holo_control.update();
-    //      Serial.print( "(vx: " );
-    //      Serial.print(odom.get_vx() );
-    //      Serial.print( ", vy: " );
-    //      Serial.print(odom.get_vy() );
-    //      Serial.print( ") " );
-    //      Serial.print( "(x: " );
-    //      Serial.print(odom.get_x() );
-    //      Serial.print( ", y: " );
-    //      Serial.print(odom.get_y() );
-    //      Serial.print( ", theta: " );
-    //      Serial.print(odom.get_theta() );
-    //      Serial.println( ")" );
-    //      // Serial.print(motor2.get_target_speed());
-    //      // Serial.print(" ");
-    //      // Serial.print(motor2.get_ramped_target_speed());
-    //      // Serial.print(" ");
-    //      // Serial.println(odom.get_v2speed());
-    //  }
+    pince.update(CLAW_OPEN);
+    
+    if (odom_refresh.check())
+    {
+        odom.update();
+        holo_control.update();
+        // Serial.print( "(vx: " );
+        // Serial.print(odom.get_vx() );
+        // Serial.print( ", vy: " );
+        // Serial.print(odom.get_vy() );
+        // Serial.print( ") " );
+        // Serial.print( "(x: " );
+        // Serial.print(odom.get_x() );
+        // Serial.print( ", y: " );
+        // Serial.print(odom.get_y() );
+        // Serial.print( ", theta: " );
+        // Serial.print(odom.get_theta() );
+        // Serial.println( ")" );
+        // Serial.print(motor2.get_target_speed());
+        // Serial.print(" ");
+        // Serial.print(motor2.get_ramped_target_speed());
+        // Serial.print(" ");
+        // Serial.println(odom.get_v2speed());
+    }
 
     
 }

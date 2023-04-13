@@ -4,7 +4,8 @@
 #include "AX12A.h"
 #include "DisplayController.h"
 #include "config.h"
-#include "holo_control.h" 
+#include "holo_control.h"
+#include "odometry.h" 
 
 
 const int LEN_MESSAGES[] = {
@@ -35,8 +36,10 @@ const int LEN_MESSAGES[] = {
 // Analyse des informations contenues dans les messages SerialCom
 void Comm::cmdStop(){// Stops the robot
         holo_control.stop();
-        SerialCom.println("m Stopping robot.");
+        SerialCom.println("M Stopping robot.");
 }
+
+//
 void Comm::resetPosition(){
     char *x_addr,*y_addr,*theta_addr;
     uint16_t x,y,theta;
@@ -45,27 +48,73 @@ void Comm::resetPosition(){
     theta_addr = buffer +5;
     x = *x_addr;
     y = *y_addr;
-    theta = *theta_addr;
-    
-}  
+    theta = *theta_addr;   
+}
+
+//Affiche nombre donné dans message
 void Comm::cmdActionneurDisplay(){
-    int val = -1;
-    int params = sscanf(buffer, "a d %d", &val);
-    if (params == 1){
-        afficheur.setNbDisplayed(val);
-    }
+    afficheur.setNbDisplayed(*((uint8_t*)(buffer+1)));
+}
+
+//Send arbitrary string for debug purposes
+void Comm::sendMessage (char* message, int size){
+    SerialCom.write("M",1);
+    SerialCom.write(message,size);
+    SerialCom.write("\n",1);
+}
+
+//Terminé ordre trieuse
+void Comm::reportActionFinsihed(uint8_t actionNumber){
+    char message[] = "\n\nd**";//start + type + number + checkSum
+    message [3] = actionNumber;//parametre du message
+    message [4] = message[2] + actionNumber + this->PROTOCOL_VERSION;//calcul du checksum
+    SerialCom.write(message,5);
 }
 
 //Report du démarage
-
 void Comm::reportStart(){
-    char *message = "\n\nTc";//start + type + checkSum
-    message[3] = message[2] + this->PROTOCOL_VERSION;//calcul de la checksum
+    char message[] = "\n\nT*";//start + type + checkSum
+    message[3] = message[2] + this->PROTOCOL_VERSION;//calcul du checksum
     for (int i=0;i<2;i++){
         SerialCom.write(message,4);//doublé pour redondance
     }
     SerialCom.println("\n\nM Début match !");
 }
+
+//Position Report
+void Comm::reportPosition(){
+    char message[] = "\n\np*************";
+    uint8_t sum='p';
+    float *addrX = (float *)message[3];
+    float *addrY = (float *)message[7];
+    float *addrTheta = (float *)message[11];
+    *addrX = odom.get_x();
+    *addrY = odom.get_y();
+    *addrTheta = odom.get_theta();
+    for (int i=3; i<15;i++){
+        sum+=message[i];
+    }
+    message[15]=sum;
+    SerialCom.write(message,16);
+}
+
+//Speed Report
+void Comm::reportSpeed(){
+    char message[] = "\n\nv*************";
+    uint8_t sum='v';
+    float *addrVX = (float *)message[3];
+    float *addrVY = (float *)message[7];
+    float *addrVTheta = (float *)message[11];
+    *addrVX = odom.get_vx();
+    *addrVY = odom.get_vy();
+    *addrVTheta = odom.get_vtheta();
+    for (int i=3; i<15;i++){
+        sum+=message[i];
+    }
+    message[15]=sum;
+    SerialCom.write(message,16);
+}
+
 void Comm::setType(char c){
     switch (c){
         case TYPE_POS:
@@ -140,38 +189,48 @@ void Comm::update()
     char c;
     uint8_t sum;
     switch(this->etatRadio){
-    case IDLE:
-        while (SerialCom.available() && lastRead != '\n'){
-            lastRead = SerialCom.read(); //boucle pour vider le buffer du Serial s'il se remplit de caractères à la con
-        }
-        if(lastRead == '\n'){
-            this->etatRadio = BETWEEN_START_BYTES;
-        }
-        break;
-    case BETWEEN_START_BYTES:
-        if (SerialCom.available()){
-            this->etatRadio = (SerialCom.read() == '\n') ? WAITING_TYPE : IDLE;
-        }
-        break;
-    case WAITING_TYPE:
-        if (SerialCom.available()){
-            c = SerialCom.read();
-            buffer[0]=c;
-            this->setType(c);
-        }
-        break;
-    case WAITING_REST_OF_MESSAGE:
-        if (SerialCom.available() >= this->numberOfExpectedBytes){
-            sum = buffer[0]+this->PROTOCOL_VERSION;
-            for (int i=1; i < this->numberOfExpectedBytes+1; i++){
-                buffer[i] = SerialCom.read();
-                sum += buffer[i];
+        case IDLE:
+            while (SerialCom.available() && lastRead != '\n'){
+                lastRead = SerialCom.read(); //boucle pour vider le buffer du Serial s'il se remplit de caractères à la con
             }
-            if (sum == buffer[this->numberOfExpectedBytes]){
-                this->execCommand();
+            if(lastRead == '\n'){
+                this->etatRadio = BETWEEN_START_BYTES;
             }
-            this->etatRadio=IDLE;
-        }
-        break;
+            break;
+        case BETWEEN_START_BYTES:
+            if (SerialCom.available()){
+                this->etatRadio = (SerialCom.read() == '\n') ? WAITING_TYPE : IDLE;
+            }
+            break;
+        case WAITING_TYPE:
+            if (SerialCom.available()){
+                c = SerialCom.read();
+                buffer[0]=c;
+                this->setType(c);
+            }
+            break;
+        case WAITING_REST_OF_MESSAGE:
+            if (SerialCom.available() >= this->numberOfExpectedBytes){
+                sum = buffer[0]+this->PROTOCOL_VERSION;
+                for (int i=1; i < this->numberOfExpectedBytes+1; i++){
+                    buffer[i] = SerialCom.read();
+                    sum += buffer[i];
+                }
+                if (sum == buffer[this->numberOfExpectedBytes]){
+                    this->execCommand();
+                }
+                this->etatRadio=IDLE;
+            }
+            break;
+        
+        case WAITING_FOR_END_OF_MESSAGE_STRING:
+            while (SerialCom.available() && lastRead != '\n'){
+                lastRead = SerialCom.read(); //boucle pour vider le buffer du Serial, 
+                //le bas niveau ne prends pas en compte les messages textuels du haut niveau
+            }
+            if(lastRead == '\n'){
+                this->etatRadio = IDLE;
+            }
+            break;
     }
 }

@@ -4,10 +4,11 @@
 #include <Arduino.h>
 // Communication Série du robot
 typedef enum {
-    IDLE,
-    BETWEEN_START_BYTES,
-    WAITING_TYPE,
-    WAITING_REST_OF_MESSAGE
+    IDLE,                            // wait \n
+    BETWEEN_START_BYTES,             // wait \n
+    WAITING_TYPE,                    // read type, deduct size of message
+    WAITING_REST_OF_MESSAGE,         // wait for all bytes available, then check and parse
+    WAITING_FOR_END_OF_MESSAGE_STRING// read all bytes until \n    NO USE FOUND IN THE DIRECTION HIGH_LEVEL -> LOW_LEVEL
 }radioStates_t;
 
 
@@ -31,8 +32,12 @@ typedef enum {
 class Comm
 {
 public:
-    void update();
-    void reportStart();
+    void update();                                      //call that in loop to read messages
+    void reportStart();                                 //sends Start Of Match signal to raspy
+    void reportActionFinsihed(uint8_t actionNumber);    //sends message indicating that an action ended
+    void reportPosition();                              //sends position (x, y, theta) to raspy
+    void reportSpeed();                                 //sends speeds (Vx, Vy, Vtheta) to raspy
+    void sendMessage (char* message, int size);         //sends debug Message
 
 private:
     //Attributs
@@ -62,7 +67,6 @@ private:
     void cmdSlide();
     void cmdScore();
     void cmdResume();
-    void sendMessage(char*,int len);
 };
 extern Comm radio;
 #endif
