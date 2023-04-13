@@ -37,7 +37,7 @@ public:
     void reportActionFinsihed(uint8_t actionNumber);    //sends message indicating that an action ended
     void reportPosition();                              //sends position (x, y, theta) to raspy
     void reportSpeed();                                 //sends speeds (Vx, Vy, Vtheta) to raspy
-    void sendMessage (char* message, int size);         //send debug Message
+    void sendMessage (char const * message, size_t size);         //send debug Message
 
 private:
     //Attributs
@@ -68,4 +68,4 @@ private:
     void cmdResume();
 };
 extern Comm radio;
-#endif // COMM_H
+#endif //COMM_H

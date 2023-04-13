@@ -42,10 +42,10 @@ void Comm::cmdStop(){// Stops the robot
 // Recale le robot sur la postion déduite du lidar
 void Comm::resetPosition(){
     char *x_addr,*y_addr,*theta_addr;
-    uint16_t x,y,theta;
+    float x,y,theta;
     x_addr = buffer + 1;
-    y_addr = buffer +3;
-    theta_addr = buffer +5;
+    y_addr = buffer + 5;
+    theta_addr = buffer + 9;
     x = *x_addr;
     y = *y_addr;
     theta = *theta_addr;
@@ -54,15 +54,28 @@ void Comm::resetPosition(){
     odom.set_theta(theta);   
 }
 
+//Ordre de position
+void Comm::cmdPos(){
+    char *x_addr,*y_addr,*theta_addr;
+    float x,y,theta;
+    x_addr = buffer + 1;
+    y_addr = buffer + 5;
+    theta_addr = buffer + 9;
+    x = *x_addr;
+    y = *y_addr;
+    theta = *theta_addr;
+    holo_control.set_ptarget(x, y, theta);
+}
+
 // Affiche nombre donné dans message
 void Comm::cmdScore(){
     afficheur.setNbDisplayed(*((uint8_t*)(buffer+1)));
 }
 
 //Send arbitrary string for debug purposes
-void Comm::sendMessage (char* message, int size){
+void Comm::sendMessage (char const* message, size_t size){
     SerialCom.write("\n\nM",3);
-    SerialCom.write(message,size);
+    SerialCom.write(message, size);
     SerialCom.write("\n",1);
 }
 
@@ -88,9 +101,9 @@ void Comm::reportStart(){
 void Comm::reportPosition(){
     char message[] = "\n\np*************";
     uint8_t sum='p';
-    float *addrX = (float *)message[3];
-    float *addrY = (float *)message[7];
-    float *addrTheta = (float *)message[11];
+    float *addrX = (float *)(message+3);
+    float *addrY = (float *)(message+7);
+    float *addrTheta = (float *)(message+11);
     *addrX = odom.get_x();
     *addrY = odom.get_y();
     *addrTheta = odom.get_theta();
@@ -105,9 +118,9 @@ void Comm::reportPosition(){
 void Comm::reportSpeed(){
     char message[] = "\n\nv*************";
     uint8_t sum='v';
-    float *addrVX = (float *)message[3];
-    float *addrVY = (float *)message[7];
-    float *addrVTheta = (float *)message[11];
+    float *addrVX = (float *)(message+3);
+    float *addrVY = (float *)(message+7);
+    float *addrVTheta = (float *)(message+11);
     *addrVX = odom.get_vx();
     *addrVY = odom.get_vy();
     *addrVTheta = odom.get_vtheta();
@@ -179,6 +192,8 @@ void Comm::setType(char c){
             this->typeReception = TYPE_RESUME;
             this->etatRadio = WAITING_REST_OF_MESSAGE;
             this->numberOfExpectedBytes = 1;//1 checksum
+            break;
+        case '\n'://Pour cas improbables avec plus de deux bits de start reçus
             break;
         default:
             this->etatRadio = IDLE;
