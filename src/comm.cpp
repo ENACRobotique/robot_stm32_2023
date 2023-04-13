@@ -59,9 +59,12 @@ void Comm::cmdActionneurDisplay(){
 //Report du démarage
 
 void Comm::reportStart(){
-    for (int i=0;i<3;i++){
-        SerialCom.println("c TI 42");
+    char *message = "\n\nTc";//start + type + checkSum
+    message[3] = message[2] + this->PROTOCOL_VERSION;//calcul de la checksum
+    for (int i=0;i<2;i++){
+        SerialCom.write(message,4);
     }
+    SerialCom.println("\n\nM Début match !");
 }
 void Comm::setType(char c){
     switch (c){
@@ -137,7 +140,7 @@ void Comm::update()
     case IDLE:
         char lastRead = 'P';//N'importe quoi sauf un \n pourrait aller, le choix de la lettre P est totalement arbitraire
         while (SerialCom.available() && lastRead != '\n'){
-            lastRead = SerialCom.read(); //boucle pour vider le buffer s'il se remplit de caractères à la con
+            lastRead = SerialCom.read(); //boucle pour vider le buffer du Serial s'il se remplit de caractères à la con
         }
         if(lastRead == '\n'){
             this->etatRadio = BETWEEN_START_BYTES;
@@ -158,9 +161,9 @@ void Comm::update()
     case WAITING_REST_OF_MESSAGE:
         if (SerialCom.available() >= this->numberOfExpectedBytes){
             uint8_t sum = buffer[0]+this->PROTOCOL_VERSION;
-            for (int i=0; i < this->numberOfExpectedBytes; i++){
-                buffer[i+1] = SerialCom.read();
-                sum += buffer[i+1];
+            for (int i=1; i < this->numberOfExpectedBytes+1; i++){
+                buffer[i] = SerialCom.read();
+                sum += buffer[i];
             }
             if (sum == buffer[this->numberOfExpectedBytes]){
                 this->execCommand();
