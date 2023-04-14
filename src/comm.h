@@ -25,6 +25,7 @@ typedef enum {
     TYPE_DROP_CHERRY_SLIDE='T',
     TYPE_DISPLAY_POINTS='P',
     TYPE_RESUME='R',
+    TYPE_MESSAGE_STR='M'
 } messageTypes_t;
 
 

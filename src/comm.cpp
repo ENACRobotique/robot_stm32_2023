@@ -7,32 +7,6 @@
 #include "holo_control.h"
 #include "odometry.h" 
 
-
-const int LEN_MESSAGES[] = {
-    12,// TYPE_POS,
-    12,// TYPE_RESET_POS,
-    0, // TYPE_STOP,
-    0, // TYPE_SLOW,
-};
-
-// recap des messages en entrée:
-// v <int> <int>: commande de vitesse <linéaire * 1000> <omega * 1000>
-// s : arrêt du robot
-// a <id> <int> : ordre à un actionneur. id est deux caractères,
-//       le premier donnant le type d'actionneur
-//                      (a pour AX12A, p pour pompe, e pour electroVanne, s pour servo, d pour le display)
-//       le deuxième est un chiffre d'identification.
-// d : demande de description des actionneurs. Le robot répond une seule fois
-// k: reset l'entier sentDescr
-// g [o/v] <int> <int> : changement des valeurs des PIDs (kp et ki)
-
-// recap des messages en sortie:
-// m <string>
-// r <int> <int> <int> <int> <int>: odométrie moteur <x> <y> <théta> <v> <omega>
-// f <int> <int> <int> <int> <int>: odométrie libre (roue Folle) <x> <y> <théta> <v> <omega>
-// b <string> <int> <int> <int> [R/RW] <string>: déclaration d'un actionneur (RW) ou d'un capteur (R).
-// c <string> <int> : retour de capteur
-
 // Analyse des informations contenues dans les messages SerialCom
 void Comm::cmdStop(){// Stops the robot
         holo_control.stop();
@@ -193,6 +167,9 @@ void Comm::setType(char c){
             this->etatRadio = WAITING_REST_OF_MESSAGE;
             this->numberOfExpectedBytes = 1;//1 checksum
             break;
+        case TYPE_MESSAGE_STR:
+            this->etatRadio = WAITING_FOR_END_OF_MESSAGE_STRING;
+            break;
         case '\n'://Pour cas improbables avec plus de deux bits de start reçus
             break;
         default:
@@ -263,12 +240,15 @@ void Comm::update()
         case WAITING_REST_OF_MESSAGE:
             if (SerialCom.available() >= this->numberOfExpectedBytes){
                 sum = buffer[0]+this->PROTOCOL_VERSION;
-                for (int i=1; i < this->numberOfExpectedBytes+1; i++){
+                for (int i=1; i < this->numberOfExpectedBytes; i++){
                     buffer[i] = SerialCom.read();
                     sum += buffer[i];
                 }
-                if (sum == buffer[this->numberOfExpectedBytes]){
+                if (sum == SerialCom.read()){
                     this->execCommand();
+                }
+                else {
+                    Serial.println("Checksum error!");
                 }
                 this->etatRadio=IDLE;
             }
