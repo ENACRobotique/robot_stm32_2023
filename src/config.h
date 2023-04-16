@@ -28,16 +28,20 @@
 
 #define AX12A_PIN PC4
 
-#define CLK_AFFICHEUR PB11
-#define DIO_AFFICHEUR PB12
+#define DISPLAY_CLK PB11
+#define DISPLAY_DATA PB12
+#define COLOR PC6
+#define POS_BUTTON PC5
+#define TIRETTE PC15
 
-#define INCREMENT_TO_METRE 0.0003447// 1.0/2666.66 
+#define INCREMENT_TO_METRE 0.0003447*6/8// 1.0/2666.66 
 #define VITESSE_CONSIGNE_TO_PWM_MOTOR 242.45
 
 #define ANGLE_M1 0.0
 #define ANGLE_M2 2*PI/3
 #define ANGLE_M3 -2*PI/3
-#define RAYON 0.105 //old: 0.115
+// si le robot tourne trop -> baisser le rayon
+#define RAYON 0.1314 //m
 
 #define MAX_ACCEL 2.0f //m.s^2
 
@@ -50,18 +54,21 @@
 #define SEUIL_PROCHE_ROTATION 0.2f //rad
 #define TOL_THETA 0.01 //rad
 #define COEF_DAMP_THETA 1.0f 
-#define MAX_VITESSE_ROTATION 0.8f //rad.s^-1
+#define MAX_VITESSE_ROTATION 2.0f //rad.s^-1
 
 #define INTERFACE_DRIVER 1
 #define STEPPER_1_STP PA10
 #define STEPPER_1_DIR PA0
 #define STEPPER_2_STP PC1
 #define STEPPER_2_DIR PC0
-#define STEP_SPEED 200 // step.s^-1
-#define STEP_ACC 30 //step.s^-2
+#define STEP_MAX_SPEED 2000 // step.s^-1
+#define STEP_SPEED 2000 // step.s^-1
+#define STEP_ACC 2000 //step.s^-2
 #define CM_TO_STEP 1 // À DÉFINIR step.cm^-1
 
 #define FIN_COURSE_1 PA1
 #define FIN_COURSE_2 PA15
+
+#define DEG_TO_STEP 4.44f
 
 #endif // CONFIG_HEADER
