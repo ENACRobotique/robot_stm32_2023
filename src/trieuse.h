@@ -19,6 +19,9 @@ typedef enum{
     INITIALISATION,
     IDLE_BRAS,
     UP=-10,
+    GRAB_INTERNE_1, 
+    GRAB_INTERNE_2,
+    GRAB_INTERNE_3,
     DOWN=-2100,
 }armState_t;
 
@@ -108,6 +111,7 @@ class PLATE
         PLATE(int num_stepper, int pin_zero); // stepper + fin de course
         void init();
         void update(plate_pos position); // rotation a sens unique
+        int isRunning();
     
     private :
         AccelStepper _plate_stepper;
@@ -134,5 +138,51 @@ class CLAW
         bool _state;
 
 };
+//trieuseController2000
+typedef enum {
+    IDLE_TC,
+    INIT_TC,
+    GRAB_DISCS,
+    DROP_DISC
+}trieuseControllerDirectives_t;
 
+typedef enum{
+    IDLE_G,
+    INITIAL_ROTATION_G,
+    DESCENTE_AVANT_GRAB_G,
+    GRABBING_G,
+    REMONTEE_APRES_GRAB_G,
+    ROTATION_2_ELECTRIC_BOOGALOO_G,
+    DESCENTE_AVANT_LACHER_G,
+    UNGRABBING_G,
+    RETOUR_A_LA_CASE_DEPART_G,
+}grabDiscsStates_t;
+
+typedef enum{
+    IDLE_D,
+    INITIAL_ROTATION_D,
+    DESCENTE_AVANT_GRAB_D,
+    GRABBING_D,
+    ROTATION_2_LE_RETOUR_D,
+    DESCENTE_AVANT_LACHER_D,
+    UNGRABBING_D,
+    RESET_D,
+}dropDiscState_t;
+class trieuseController2000{
+    public :
+        void update();
+        void storeDiscsToPostion (uint8_t pos, int numAction);
+        void getDiscFromPosition (uint8_t pos, int numAction);
+    private :
+        void updateInitLoop();
+        void updateDropLoop();
+        void updateGrabLoop();
+        int disqueEnStock[3]={0,0,0};
+        int _numeroAction=NULL;
+        int targetPos;
+        trieuseControllerDirectives_t etatGeneral=IDLE_TC;
+        grabDiscsStates_t etatMachineEtatGrab;
+        dropDiscState_t etatMachineEtatDrop;
+
+};
 #endif

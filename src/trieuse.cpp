@@ -1,4 +1,5 @@
 #include "trieuse.h"
+#include "comm.h"
 
 
 long stepper_pos[6] = {60, 120, 180, 240, 300, 360};
@@ -148,6 +149,9 @@ void PLATE::init()
     
 
 }
+int PLATE::isRunning(){
+    return this->_plate_stepper.isRunning();
+}
 
 void PLATE::update(plate_pos position)
 {
@@ -221,3 +225,98 @@ void CLAW::update(claw_state state)
 
 
 //############# TRIEUSE #############
+
+void trieuseController2000::update(){
+    switch(this->etatGeneral){
+        case IDLE_TC:
+            break;
+        case INIT_TC:
+            this->updateInitLoop();
+            break;
+        case GRAB_DISCS:
+            this->updateGrabLoop();
+            break;
+        case DROP_DISC:
+            this->updateDropLoop();
+            break;
+    }
+}
+
+void trieuseController2000::storeDiscsToPostion (uint8_t pos, int numAction){
+    this->targetPos = -1;
+    int posTab = 0xff;
+    switch (pos){
+        case 1:
+            this->targetPos = 1;
+            posTab = 0;
+            break;
+        case 3:
+            targetPos =3;
+            posTab = 1;
+            break;
+        case 5:
+            targetPos = 5;
+            posTab = 2;
+            break;
+        default :
+            break;
+    }
+
+    if (this->targetPos == -1){
+        char buffer[25];
+        int n = sprintf(buffer,"Wrong Position : %d",pos)-1;
+        radio.sendMessage(buffer,n);
+    }
+    else{
+        this->_numeroAction = numAction;
+        if (this->disqueEnStock[posTab]){
+            char buffer[50];
+            int n = sprintf(buffer,"Non empty position : %d remaining disks", this->disqueEnStock[posTab])-1;
+            radio.sendMessage(buffer,n);
+        }
+        else{
+            this->etatGeneral = GRAB_DISCS;
+            this->etatMachineEtatGrab = IDLE_G;
+            this->updateGrabLoop();
+        }
+    }
+}
+
+void trieuseController2000::getDiscFromPosition (uint8_t pos, int numAction){
+    this->targetPos = -1;
+    int posTab = 0xff;
+    switch (pos){
+        case 1:
+            this->targetPos = 1;
+            posTab = 0;
+            break;
+        case 3:
+            targetPos =3;
+            posTab = 1;
+            break;
+        case 5:
+            targetPos = 5;
+            posTab = 2;
+            break;
+        default :
+            break;
+    }
+    if (this->targetPos == -1){
+        char buffer[25];
+        int n = sprintf(buffer,"Wrong Position : %d",pos)-1;
+        radio.sendMessage(buffer,n);
+    }
+    else{
+        this->_numeroAction = numAction;
+        if (!this->disqueEnStock[posTab]){
+            char buffer[50];
+            radio.sendMessage("Empty position, can't get disk",30);
+        }
+        else{
+            this->etatGeneral = DROP_DISC;
+            this->etatMachineEtatDrop = IDLE_D;
+            this->updateDropLoop();
+        }
+    
+    }
+}
