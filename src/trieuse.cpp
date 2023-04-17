@@ -66,19 +66,66 @@ void ARM::update(){
             this->lift_stepper.moveTo((long)DOWN);
             this->lift_stepper.run();
             break;
+        case GRAB_INTERNE_1:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_1);
+            this->lift_stepper.run();
+            break;
+        case GRAB_INTERNE_2:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_2);
+            this->lift_stepper.run();
+            break;
+        case GRAB_INTERNE_3:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_3);
+            this->lift_stepper.run();
+            break;
+        case GRAB_EXTERNE_1:
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE_1);
+            this->lift_stepper.run();
+            break;
+        case GRAB_EXTERNE_2:
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE_2);
+            this->lift_stepper.run();
+            break;
+        case GRAB_EXTERNE_3:
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE_3);
+            this->lift_stepper.run();
         case IDLE_BRAS:
             break;
     }
 }
 void ARM::toggleBras(int choice){
     switch (choice){
+
         case 0:
-            this->lift_stepper.moveTo((long)DOWN);
-            this->etatBras=DOWN;
-            break;
-        case 1:
             this->lift_stepper.moveTo(UP);
             this->etatBras=UP;
+            break;
+        case 1:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_1);
+            this->etatBras= GRAB_INTERNE_1;
+            break;
+        case 2:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_2);
+            this->etatBras= GRAB_INTERNE_2;
+            break;
+        case 3:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_3);
+            this->etatBras= GRAB_INTERNE_3;
+            break;
+        case 4:
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE_1);
+            this->etatBras= GRAB_EXTERNE_1;
+            break;
+        case 5:
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE_2);
+            this->etatBras= GRAB_EXTERNE_2;
+            break;
+        case 6:
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE_3);
+            this->etatBras= GRAB_EXTERNE_3;
+        case 7:
+            this->lift_stepper.moveTo((long)DOWN);
+            this->etatBras=DOWN;
             break;
         default:
             this->toggleBras(((this->etatBras)==DOWN)?1:0);

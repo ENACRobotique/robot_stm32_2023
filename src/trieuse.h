@@ -19,9 +19,13 @@ typedef enum{
     INITIALISATION,
     IDLE_BRAS,
     UP=-10,
-    GRAB_INTERNE_1, 
-    GRAB_INTERNE_2,
-    GRAB_INTERNE_3,
+    ABOVE =-1100,
+    GRAB_EXTERNE_1=-1200, 
+    GRAB_EXTERNE_2=-1300,
+    GRAB_EXTERNE_3=-1400,
+    GRAB_INTERNE_1=-1500, 
+    GRAB_INTERNE_2=-1600,
+    GRAB_INTERNE_3=-1700,
     DOWN=-2100,
 }armState_t;
 
@@ -83,7 +87,7 @@ class ARM
     public :
         ARM(int PinFinCourse, int NumStepper, int idAX12Elbow, int idAX12Main,DynamixelSerial* AX12As); // + servo + ax12
         void init(HardwareSerial *serialDynamixel);
-        void toggleBras(int choice = 2); // 0 pour en bas, 1 pour en haut, le reste pour 
+        void toggleBras(int choice); // de 1 à 8 pour du plus haut au plus bas
                                          //l'endroit où le bras n'est pas.
         void toggleElbow(int choice = 2);// 0 pour l'intérieur, 1 pour l'extérieur, le 
                                          //reste por une valeur par défaut
@@ -178,7 +182,7 @@ class trieuseController2000{
         void updateDropLoop();
         void updateGrabLoop();
         int disqueEnStock[3]={0,0,0};
-        int _numeroAction=NULL;
+        int _numeroAction = 0 ;
         int targetPos;
         trieuseControllerDirectives_t etatGeneral=IDLE_TC;
         grabDiscsStates_t etatMachineEtatGrab;
