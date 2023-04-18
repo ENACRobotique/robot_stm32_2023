@@ -74,7 +74,7 @@ void Comm::reportStart(){
 //Position Report
 void Comm::reportPosition(){
     char message[] = "\n\np*************";
-    uint8_t sum='p';
+    uint8_t sum='p'+this->PROTOCOL_VERSION;
     float *addrX = (float *)(message+3);
     float *addrY = (float *)(message+7);
     float *addrTheta = (float *)(message+11);
@@ -91,7 +91,7 @@ void Comm::reportPosition(){
 //Speed Report
 void Comm::reportSpeed(){
     char message[] = "\n\nv*************";
-    uint8_t sum='v';
+    uint8_t sum='v'+this->PROTOCOL_VERSION;
     float *addrVX = (float *)(message+3);
     float *addrVY = (float *)(message+7);
     float *addrVTheta = (float *)(message+11);
