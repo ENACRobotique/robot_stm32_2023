@@ -182,6 +182,7 @@ void Comm::setType(char c){
 void Comm::execCommand(){
     switch(typeReception){
         case TYPE_POS:
+            this->cmdPos();
             break;
         case TYPE_RESET_POS:
             this->resetPosition();
