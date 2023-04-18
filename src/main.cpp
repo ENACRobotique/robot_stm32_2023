@@ -18,6 +18,7 @@ int buttonPressed;
 uint32_t lastPressedTimeStamp;
 int positionDepart=1;
 int colorIsGreen;
+Metro odomSpamTimer(100);
 Metro bruhcmd(1000);
 Metro lazytimer(5000);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
@@ -111,24 +112,23 @@ void setup() {
 }
 
 void loop() {
-    // if (digitalRead(TIRETTE)){//si la tirette est là
-    //     colorIsGreen = digitalRead(COLOR);
-    //     if (!digitalRead(POS_BUTTON)){
-    //         buttonPressed = 1;
-    //         lastPressedTimeStamp = millis();
-    //     }
-    //     else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
-    //         buttonPressed=0;
-    //         positionDepart %=5;
-    //         positionDepart++;
-    //         afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
-    //     }
-    // }
-    
-    // if (bruhcmd.check()) {
-    // position = (position + 1) % 4;
-    // holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
-    // }
+    if (digitalRead(TIRETTE)){//si la tirette est là
+        colorIsGreen = digitalRead(COLOR);
+        if (!digitalRead(POS_BUTTON)){
+            buttonPressed = 1;
+            lastPressedTimeStamp = millis();
+        }
+        else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
+            buttonPressed=0;
+            positionDepart %=5;
+            positionDepart++;
+            afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
+        }
+    }
+    if (odomSpamTimer.check()){
+        radio.reportPosition();
+        radio.reportSpeed();
+    }
 
     
     if (lazytimer.check())
