@@ -119,50 +119,6 @@ void setup() {
 }
 
 void loop() {
-    if (odom_refresh.check())
-    {
-        afficheur.setNbDisplayed((cmd_order%6));
-        odom.update();
-        holo_control.update();
-        pince.update(CLAW_CLOSED);
-        if(lazytimer.check())//abs(odom.get_theta()-teta_pos_order[cmd_order%6])<= tgt_error && abs(odom.get_x()-x_pos_order[cmd_order%6])<= tgt_error && abs(odom.get_y()-y_pos_order[cmd_order%6]) <= tgt_error )
-        {
-         holo_control.set_ptarget(x_pos_order[cmd_order%6],y_pos_order[cmd_order%6],teta_pos_order[cmd_order%6]);
-         cmd_order++;
-         
-        }
-        // Serial.print( "(vx: " );
-        // Serial.print(odom.get_vx() );
-        // Serial.print( ", vy: " );
-        // Serial.print(odom.get_vy() );
-        // Serial.print( ") " );
-        // Serial.print( "(x: " );
-        // Serial.print(odom.get_x() );
-        // Serial.print( ", y: " );
-        // Serial.print(odom.get_y() );
-        Serial.print( ", theta odom : " );
-        Serial.print(odom.get_theta() );
-        Serial.print( ")" );
-        // Serial.print(motor2.get_target_speed());
-        // Serial.print(" ");
-        // Serial.print(motor2.get_ramped_target_speed());
-        // Serial.print(" ");
-        // Serial.println(odom.get_v2speed());
-        
-        
-        // Serial.print( "(x: " );
-        // Serial.print(x_pos_order[cmd_order%6]);
-        // Serial.print( ", y: " );
-        // Serial.print(y_pos_order[cmd_order%6]);
-        // Serial.print(" ");
-        Serial.print( ", theta order : " );
-        Serial.println(teta_pos_order[cmd_order%6]);
-        
-        // Serial.print(" ORDER ");
-        // Serial.println(cmd_order%6);
-
-
-    }
     if (digitalRead(TIRETTE)){//si la tirette est là
         colorIsGreen = digitalRead(COLOR);
         if (!digitalRead(POS_BUTTON)){
