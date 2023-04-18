@@ -19,7 +19,7 @@ uint32_t lastPressedTimeStamp;
 int positionDepart=1;
 int colorIsGreen;
 Metro bruhcmd(1000);
-Metro lazytimer(5000);
+Metro lazytimer(10000);
 Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
     //l'encodeur associé ne tourne pas dans le même sens que les autres, besoin d'un signe -
     //les autres tournent dans le sens trigo pour les valeurs positives
@@ -47,17 +47,17 @@ CLAW pince(SERVO_2, SERVO_1);
 claw_state state[3] = {CLAW_CLOSED,CLAW_OPEN,CLAW_GRAB};
 PLATE plateau(1,FIN_COURSE_1);
 plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
-armState_t disk_select[8]= 
-{   ABOVE,
-    GRAB_EXTERNE_1, 
-    GRAB_EXTERNE_2,
-    GRAB_EXTERNE_3,
-    GRAB_INTERNE_1, 
-    GRAB_INTERNE_2,
-    GRAB_INTERNE_3,
-    DOWN,
-};
+
+
 int disk;
+bool main_state;
+int procedure;
+//loop (assiete_V_5 -> assiette_B_5 -> assiette_V_2 -> assiette B_2 -> assiette_V_5)
+float x_pos_order[5]={-1.125,-1.125,-1.875,-1.875,-1.125};
+float y_pos_order[5]={-0.225,-1.775,-1.775,-0.225,-0.225};
+float teta_pos_order[5]={0.f,0.f,0.f,0.f,0.f};
+int cmd_order;
+float tgt_error=0.15;
 
 int position = 0;
 float tableau[] = {
@@ -78,13 +78,15 @@ void setup() {
     Serial3.begin(500000);
     
     radio.sendMessage("Initialisation Bras",19);
-    arm.init(&Serial3);
-    arm.update();
+    arm.init(&Serial3); // NE PAS METTRE ARM.UPDATE DANS LE SETUP !!! => ÇA PLANTE
+    arm.toggleMain(0);
     plateau.init();
     plateau.update(PLATE_INIT);
-    // pince.init();
-    // pince.update(CLAW_CLOSED);
+    pince.init();
+    pince.update(CLAW_CLOSED);
     disk = 0;
+    procedure =0 ;
+    main_state = 0;
     radio.sendMessage("Bras Initialisé",16);
     
     radio.sendMessage("Démarrage du robot bas niveau v0.2.0",37);
@@ -105,12 +107,61 @@ void setup() {
     odom_refresh.reset();
     radio.sendMessage("Odométrie initialisée",23);
     
-    //holo_control.set_ptarget(0.5, 0.f, 0);
+    //holo_control.set_ptarget(5, 0.f, 0);
+    odom.set_x(x_pos_order[0]);
+    odom.set_y(y_pos_order[0]);
+    odom.set_theta(teta_pos_order[0]);
+    cmd_order=0;
+    
 
     
 }
 
 void loop() {
+    if (odom_refresh.check())
+    {
+        afficheur.setNbDisplayed((cmd_order%6));
+        odom.update();
+        holo_control.update();
+        pince.update(CLAW_CLOSED);
+        if(lazytimer.check())//abs(odom.get_theta()-teta_pos_order[cmd_order%6])<= tgt_error && abs(odom.get_x()-x_pos_order[cmd_order%6])<= tgt_error && abs(odom.get_y()-y_pos_order[cmd_order%6]) <= tgt_error )
+        {
+         holo_control.set_ptarget(x_pos_order[cmd_order%6],y_pos_order[cmd_order%6],teta_pos_order[cmd_order%6]);
+         cmd_order++;
+         
+        }
+        // Serial.print( "(vx: " );
+        // Serial.print(odom.get_vx() );
+        // Serial.print( ", vy: " );
+        // Serial.print(odom.get_vy() );
+        // Serial.print( ") " );
+        // Serial.print( "(x: " );
+        // Serial.print(odom.get_x() );
+        // Serial.print( ", y: " );
+        // Serial.print(odom.get_y() );
+        Serial.print( ", theta odom : " );
+        Serial.print(odom.get_theta() );
+        Serial.print( ")" );
+        // Serial.print(motor2.get_target_speed());
+        // Serial.print(" ");
+        // Serial.print(motor2.get_ramped_target_speed());
+        // Serial.print(" ");
+        // Serial.println(odom.get_v2speed());
+        
+        
+        // Serial.print( "(x: " );
+        // Serial.print(x_pos_order[cmd_order%6]);
+        // Serial.print( ", y: " );
+        // Serial.print(y_pos_order[cmd_order%6]);
+        // Serial.print(" ");
+        Serial.print( ", theta order : " );
+        Serial.println(teta_pos_order[cmd_order%6]);
+        
+        // Serial.print(" ORDER ");
+        // Serial.println(cmd_order%6);
+
+
+    }
     // if (digitalRead(TIRETTE)){//si la tirette est là
     //     colorIsGreen = digitalRead(COLOR);
     //     if (!digitalRead(POS_BUTTON)){
@@ -130,16 +181,45 @@ void loop() {
     // holo_control.set_vtarget_table(0.0, tableau[position], 0.0);
     // }
 
-    
-    if (lazytimer.check())
-    {
-        digitalToggle(LED_BUILTIN);
-        arm.toggleBras(disk%8); 
-        disk++;
-        Serial.println(disk%8);
+    //arm.update();
 
-    }
-    arm.update();
+    // if (bruhcmd.check())
+    // {
+
+    //     if(!(arm.getEtatBras() == INITIALISATION))
+    //     {
+
+    //         digitalToggle(LED_BUILTIN);
+    //         switch (procedure%6)
+    //         {
+    //         case 0 :
+    //             arm.toggleBras(0);
+    //             break;
+    //         case 1 :
+    //             arm.toggleBras(3);
+    //             break;
+    //         case 2 :
+    //             arm.toggleMain(1);
+    //             break;
+    //         case 3 :
+    //             arm.toggleBras(0);
+    //             break;
+    //         case 4 :
+    //             arm.toggleBras(3);
+    //             break;
+    //         case 5 :
+    //             arm.toggleMain(0);
+    //             break;    
+            
+    //         default:
+    //             break;
+    //         }
+
+    //         if (arm.IsBrasTargetReach()) {procedure++;};
+            
+    //     };
+    // }
+    
 
     //plateau.update(cmd[pos%6]);
 
@@ -156,28 +236,6 @@ void loop() {
     // }
     //pince.update(CLAW_OPEN);
     
-    // if (odom_refresh.check())
-    // {
-    //     odom.update();
-    //     holo_control.update();
-    //     // Serial.print( "(vx: " );
-    //     // Serial.print(odom.get_vx() );
-    //     // Serial.print( ", vy: " );
-    //     // Serial.print(odom.get_vy() );
-    //     // Serial.print( ") " );
-    //     // Serial.print( "(x: " );
-    //     // Serial.print(odom.get_x() );
-    //     // Serial.print( ", y: " );
-    //     // Serial.print(odom.get_y() );
-    //     // Serial.print( ", theta: " );
-    //     // Serial.print(odom.get_theta() );
-    //     // Serial.println( ")" );
-    //     // Serial.print(motor2.get_target_speed());
-    //     // Serial.print(" ");
-    //     // Serial.print(motor2.get_ramped_target_speed());
-    //     // Serial.print(" ");
-    //     // Serial.println(odom.get_v2speed());
-    // }
 
     
 }

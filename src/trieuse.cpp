@@ -35,7 +35,7 @@ void ARM::init(HardwareSerial* serialDynamixel){
     this->lift_stepper = AccelStepper (INTERFACE_DRIVER, this->pinSTP, this->pinDIR);
     this->AX12A->init(serialDynamixel);
     this->etatBras = INITIALISATION;
-    this->etatMain = UNGRAB;
+    this->etatMain = UNGRAB_MAIN;
     this->etatAX = OUTWARDS;
     this->AX12A->setCMargin(4,5,5);
     this->toggleElbow(1);
@@ -45,6 +45,7 @@ void ARM::init(HardwareSerial* serialDynamixel){
     this->lift_stepper.setSpeed(STEP_SPEED);
     pinMode(this->pinFinCourse,INPUT_PULLUP);
 }
+armState_t ARM::getEtatBras(){return this->etatBras;}
 
 void ARM::update(){
     switch (this->etatBras){
@@ -66,29 +67,22 @@ void ARM::update(){
             this->lift_stepper.moveTo((long)DOWN);
             this->lift_stepper.run();
             break;
-        case GRAB_INTERNE_1:
-            this->lift_stepper.moveTo((long)GRAB_INTERNE_1);
+        case GRAB_INTERNE_UP:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_UP);
             this->lift_stepper.run();
             break;
-        case GRAB_INTERNE_2:
-            this->lift_stepper.moveTo((long)GRAB_INTERNE_2);
+        case GRAB_INTERNE_MIDDLE:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_MIDDLE);
             this->lift_stepper.run();
             break;
-        case GRAB_INTERNE_3:
-            this->lift_stepper.moveTo((long)GRAB_INTERNE_3);
+        case GRAB_INTERNE_DOWN:
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_DOWN);
             this->lift_stepper.run();
             break;
-        case GRAB_EXTERNE_1:
-            this->lift_stepper.moveTo((long)GRAB_EXTERNE_1);
+        case GRAB_EXTERNE:
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE);
             this->lift_stepper.run();
             break;
-        case GRAB_EXTERNE_2:
-            this->lift_stepper.moveTo((long)GRAB_EXTERNE_2);
-            this->lift_stepper.run();
-            break;
-        case GRAB_EXTERNE_3:
-            this->lift_stepper.moveTo((long)GRAB_EXTERNE_3);
-            this->lift_stepper.run();
         case IDLE_BRAS:
             break;
     }
@@ -101,29 +95,22 @@ void ARM::toggleBras(int choice){
             this->etatBras=UP;
             break;
         case 1:
-            this->lift_stepper.moveTo((long)GRAB_INTERNE_1);
-            this->etatBras= GRAB_INTERNE_1;
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_UP);
+            this->etatBras= GRAB_INTERNE_UP;
             break;
         case 2:
-            this->lift_stepper.moveTo((long)GRAB_INTERNE_2);
-            this->etatBras= GRAB_INTERNE_2;
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_MIDDLE);
+            this->etatBras= GRAB_INTERNE_MIDDLE;
             break;
         case 3:
-            this->lift_stepper.moveTo((long)GRAB_INTERNE_3);
-            this->etatBras= GRAB_INTERNE_3;
+            this->lift_stepper.moveTo((long)GRAB_INTERNE_DOWN);
+            this->etatBras= GRAB_INTERNE_DOWN;
             break;
         case 4:
-            this->lift_stepper.moveTo((long)GRAB_EXTERNE_1);
-            this->etatBras= GRAB_EXTERNE_1;
+            this->lift_stepper.moveTo((long)GRAB_EXTERNE);
+            this->etatBras= GRAB_EXTERNE;
             break;
         case 5:
-            this->lift_stepper.moveTo((long)GRAB_EXTERNE_2);
-            this->etatBras= GRAB_EXTERNE_2;
-            break;
-        case 6:
-            this->lift_stepper.moveTo((long)GRAB_EXTERNE_3);
-            this->etatBras= GRAB_EXTERNE_3;
-        case 7:
             this->lift_stepper.moveTo((long)DOWN);
             this->etatBras=DOWN;
             break;
@@ -131,6 +118,12 @@ void ARM::toggleBras(int choice){
             this->toggleBras(((this->etatBras)==DOWN)?1:0);
     }
 }
+
+bool ARM::IsBrasTargetReach()
+{
+    return this->lift_stepper.targetPosition() == this->lift_stepper.currentPosition();
+}
+
 void ARM::toggleElbow(int choice){
     switch (choice){
         case 0:
@@ -149,15 +142,15 @@ void ARM::toggleElbow(int choice){
 void ARM::toggleMain(int choice){
     switch(choice){
         case 0:
-            this->AX12A->move(this->ID_AX_Main,UNGRAB);
-            this->etatMain = UNGRAB;
+            this->AX12A->move(this->ID_AX_Main,UNGRAB_MAIN);
+            this->etatMain = UNGRAB_MAIN;
             break;
         case 1:
-            this->AX12A->move(this->ID_AX_Main,GRAB);
-            this->etatMain = GRAB;
+            this->AX12A->move(this->ID_AX_Main,GRAB_MAIN);
+            this->etatMain = GRAB_MAIN;
             break;
         default:
-            toggleMain(((this->etatMain)==GRAB)?0:1);
+            toggleMain(((this->etatMain)==GRAB_MAIN)?0:1);
     }
 }
 

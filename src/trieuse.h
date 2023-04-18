@@ -19,20 +19,17 @@ typedef enum{
     INITIALISATION,
     IDLE_BRAS,
     UP=-10,
-    ABOVE =-1100,
-    GRAB_EXTERNE_1=-1200, 
-    GRAB_EXTERNE_2=-1300,
-    GRAB_EXTERNE_3=-1400,
-    GRAB_INTERNE_1=-1500, 
-    GRAB_INTERNE_2=-1600,
-    GRAB_INTERNE_3=-1700,
+    GRAB_INTERNE_UP=-2200, 
+    GRAB_INTERNE_MIDDLE=-3300,
+    GRAB_INTERNE_DOWN=-4500,
+    GRAB_EXTERNE=-8200,
     DOWN=-2100,
 }armState_t;
 
 typedef enum{
     IDLE_MAIN,
-    UNGRAB=200,
-    GRAB=500
+    UNGRAB_MAIN=500,
+    GRAB_MAIN=350
 }handState_t;
 
 //plateau
@@ -81,7 +78,7 @@ typedef enum
     CLAW_GRAB = 2,
 }claw_state;
 
-
+//Bras
 class ARM
 {
     public :
@@ -94,6 +91,8 @@ class ARM
         void toggleMain(int choice=2);   // 0 pour lâcher, 1 pour attraper, le 
                                          //reste por une valeur par défaut
         void update();
+        armState_t getEtatBras();
+        bool IsBrasTargetReach();
 
     private:
         AccelStepper lift_stepper;
