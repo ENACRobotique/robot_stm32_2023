@@ -363,7 +363,6 @@ void trieuseController2000::getDiscFromPosition (uint8_t pos, int numAction){
 
 
 // procédure de ramassage (exemple )
-
     //     if(!(arm.getEtatBras() == INITIALISATION))
     //     {
 

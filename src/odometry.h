@@ -36,31 +36,33 @@ class Odometry{
         }
         void update();
 
-        float get_v1speed(){return v1;};
-        float get_v2speed(){return v2;};
-        float get_v3speed(){return v3;};
+        double get_v1speed(){return v1;};
+        double get_v2speed(){return v2;};
+        double get_v3speed(){return v3;};
 
-        float get_vx_robot(){return vx_robot;};
-        float get_vy_robot(){return vy_robot;};
-        float get_vtheta(){return vtheta;};
+        double get_vx_robot(){return vx_robot;};
+        double get_vy_robot(){return vy_robot;};
+        double get_vtheta(){return vtheta;};
 
-        float get_vx(){return vx;};
-        float get_vy(){return vy;};
+        double get_vx(){return vx;};
+        double get_vy(){return vy;};
 
-        float get_x(){return x;};
-        float get_y(){return y;};
-        float get_theta(){return theta;};
+        double get_x(){return x;};
+        double get_y(){return y;};
+        double get_theta(){return theta;};
 
-        void set_x(float x){this->x = x;};
-        void set_y(float y){this->y = y;};
-        void set_theta(float theta){this->theta = theta;};
+        void set_x(double x){this->x = x;};
+        void set_y(double y){this->y = y;};
+        void set_theta(double theta){this->theta = theta;};
+
+        void print_odometry();
 
     
     private:
-        float v1, v2, v3;
-        float vx_robot, vy_robot, vtheta;
-        float vx, vy;
-        float x, y, theta;
+        double v1, v2, v3;
+        double vx_robot, vy_robot, vtheta;
+        double vx, vy;
+        double x, y, theta;
         uint32_t lastMillis;
 
         Encoder *e1, *e2, *e3;

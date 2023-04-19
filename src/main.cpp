@@ -28,7 +28,7 @@ Encoder encoder1(ENCODER_1_A, ENCODER_1_B);
 Encoder encoder2(ENCODER_2_A, ENCODER_2_B);
 Encoder encoder3(ENCODER_3_A, ENCODER_3_B);
 
-//MotorController(int mot_dir, int mot_pwm, bool reverse, float kp, float ki, float min, float max, int motor_number);
+//MotorController(int mot_dir, int mot_pwm, bool reverse, double kp, double ki, double min, double max, int motor_number);
 // MotorController motor1(MOTOR_1_DIR, MOTOR_1_PWM, false, 1.2, 0.5, -200.0, 200.0, 1);
 // MotorController motor2(MOTOR_2_DIR, MOTOR_2_PWM, false, 1.2, 0.5, -200.0, 200.0, 2);
 // MotorController motor3(MOTOR_3_DIR, MOTOR_3_PWM, false, 1.2, 0.5, -200.0, 200.0, 3);
@@ -54,14 +54,14 @@ int disk;
 bool main_state;
 int procedure;
 //loop (assiete_V_5 -> assiette_B_5 -> assiette_V_2 -> assiette B_2 -> assiette_V_5)
-float x_pos_order[5]={-1.125,-1.125,-1.875,-1.875,-1.125};
-float y_pos_order[5]={-0.225,-1.775,-1.775,-0.225,-0.225};
-float teta_pos_order[5]={0.f,0.f,0.f,0.f,0.f};
+double x_pos_order[4]={1.125, 1.125, 1.875, 1.875};
+double y_pos_order[4]={0, 2.5, 1.775, 0.225};
+double teta_pos_order[4]={ANGLE_PLAT, ANGLE_PLAT, ANGLE_PLAT, ANGLE_PLAT};
 int cmd_order;
-float tgt_error=0.015;
+double tgt_error=0.015;
 
 int position = 0;
-float tableau[] = {
+double tableau[] = {
     0.5,
     0.0,
     -0.5,
@@ -112,42 +112,51 @@ void setup() {
     odom.set_x(x_pos_order[0]);
     odom.set_y(y_pos_order[0]);
     odom.set_theta(teta_pos_order[0]);
-    cmd_order=0;
+    cmd_order=1;
     
 
     
 }
 
 void loop() {
-    if (digitalRead(TIRETTE)){//si la tirette est là
-        colorIsGreen = digitalRead(COLOR);
-        if (!digitalRead(POS_BUTTON)){
-            buttonPressed = 1;
-            lastPressedTimeStamp = millis();
-        }
-        else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
-            buttonPressed=0;
-            positionDepart %=5;
-            positionDepart++;
-            afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
-        }
-    }
-    if (odomSpamTimer.check()){
-        radio.reportPosition();
-        radio.reportSpeed();
-    }
+    // if (digitalRead(TIRETTE)){//si la tirette est là
+    //     colorIsGreen = digitalRead(COLOR);
+    //     if (!digitalRead(POS_BUTTON)){
+    //         buttonPressed = 1;
+    //         lastPressedTimeStamp = millis();
+    //     }
+    //     else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
+    //         buttonPressed=0;
+    //         positionDepart %=5;
+    //         positionDepart++;
+    //         afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
+    //     }
+    // }
+    // if (odomSpamTimer.check()){
+    //     radio.reportPosition();
+    //     radio.reportSpeed();
+    // }
 
-    if (bruhcmd.check())
+    if (odom_refresh.check())
     {
         odom.update();
         holo_control.update();
-        if (lazytimer.check())
-        {
-            holo_control.set_ptarget(x_pos_order[cmd_order++%6],y_pos_order[cmd_order++%6],teta_pos_order[cmd_order++%6]);
-        }
+
     }
 
-    //arm.update();
+    if (lazytimer.check())
+    {
+        
+        holo_control.set_ptarget(x_pos_order[cmd_order],y_pos_order[cmd_order],teta_pos_order[cmd_order]);
+        //pince.update(CLAW_CLOSED);
+        //afficheur.setNbDisplayed(cmd_order);
+
+        cmd_order = (cmd_order + 1) %4;
+    }
+
+    if (bruhcmd.check()) {
+        odom.print_odometry();
+    }
 
     // if (bruhcmd.check())
     // {
