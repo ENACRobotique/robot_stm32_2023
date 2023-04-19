@@ -119,6 +119,7 @@ void setup() {
 }
 
 void loop() {
+    radio.update();
     if (digitalRead(TIRETTE)){//si la tirette est là
         colorIsGreen = digitalRead(COLOR);
         if (!digitalRead(POS_BUTTON)){
@@ -138,11 +139,12 @@ void loop() {
     }
 
     if (bruhcmd.check())
-    {
+    {   digitalToggle(LED_BUILTIN);
         odom.update();
         holo_control.update();
         if (lazytimer.check())
         {
+            radio.sendMessage("Heart beat",10);
             holo_control.set_ptarget(x_pos_order[cmd_order++%6],y_pos_order[cmd_order++%6],teta_pos_order[cmd_order++%6]);
         }
     }

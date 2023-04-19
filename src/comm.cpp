@@ -15,17 +15,15 @@ void Comm::cmdStop(){// Stops the robot
 
 // Recale le robot sur la postion déduite du lidar
 void Comm::resetPosition(){
-    char *x_addr,*y_addr,*theta_addr;
-    float x,y,theta;
-    x_addr = buffer + 1;
-    y_addr = buffer + 5;
-    theta_addr = buffer + 9;
-    x = *x_addr;
-    y = *y_addr;
-    theta = *theta_addr;
-    odom.set_x(x);
-    odom.set_y(y);
-    odom.set_theta(theta);   
+
+    struct msgPos *msg = reinterpret_cast<struct msgPos *>(MSG_BUF);
+
+    odom.set_x(msg->x);
+    odom.set_y(msg->y);
+    odom.set_theta(msg->theta);
+    char bufferEnv[45];
+    int i=sprintf(bufferEnv,"Position reseted to (%d, %d, %d)",(int)odom.get_x(),(int)odom.get_y(),(int)odom.get_theta()); 
+    this->sendMessage(bufferEnv,i);  
 }
 
 //Ordre de position
@@ -43,6 +41,8 @@ void Comm::cmdPos(){
 
 // Affiche nombre donné dans message
 void Comm::cmdScore(){
+    SerialCom.print("\n\nMAfficheur affiche ");
+    SerialCom.println(*((uint8_t*)(buffer+1)));
     afficheur.setNbDisplayed(*((uint8_t*)(buffer+1)));
 }
 
@@ -75,12 +75,21 @@ void Comm::reportStart(){
 void Comm::reportPosition(){
     char message[] = "\n\np*************";
     uint8_t sum='p'+this->PROTOCOL_VERSION;
-    float *addrX = (float *)(message+3);
-    float *addrY = (float *)(message+7);
-    float *addrTheta = (float *)(message+11);
-    *addrX = odom.get_x();
-    *addrY = odom.get_y();
-    *addrTheta = odom.get_theta();
+
+    struct msgPos pos = {
+        .x = odom.get_x(),
+        .y = odom.get_y(),
+        .theta = odom.get_theta(),
+    };
+    memcpy(&message[3], &pos, sizeof(struct msgPos));
+
+    // float x = odom.get_x();
+    // float y = odom.get_y();
+    // float theta = odom.get_theta();
+    // memcpy(&message[3], &x, sizeof(float));
+    // memcpy(&message[7], &y, sizeof(float));
+    // memcpy(&message[11], &theta, sizeof(float));
+
     for (int i=3; i<15;i++){
         sum+=message[i];
     }
@@ -92,12 +101,12 @@ void Comm::reportPosition(){
 void Comm::reportSpeed(){
     char message[] = "\n\nv*************";
     uint8_t sum='v'+this->PROTOCOL_VERSION;
-    float *addrVX = (float *)(message+3);
-    float *addrVY = (float *)(message+7);
-    float *addrVTheta = (float *)(message+11);
-    *addrVX = odom.get_vx();
-    *addrVY = odom.get_vy();
-    *addrVTheta = odom.get_vtheta();
+    struct msgPos speed = {
+        .x = odom.get_vx(),
+        .y = odom.get_vy(),
+        .theta = odom.get_vtheta(),
+    };
+    memcpy(&message[3], &speed, sizeof(struct msgPos));
     for (int i=3; i<15;i++){
         sum+=message[i];
     }
