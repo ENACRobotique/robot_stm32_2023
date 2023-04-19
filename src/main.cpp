@@ -10,6 +10,7 @@
 #include "DisplayController.h"
 #include "comm.h"
 
+uint8_t hasMatchStarted = 0;
 DisplayController afficheur = DisplayController();
 DynamixelSerial AX12As;
 Metro odom_refresh(10);
@@ -135,6 +136,11 @@ void loop() {
                 afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);// 6 = G et 8 = B, ici on parle le L3375P34K      (-;
             }
         }
+        else if (hasMatchStarted) {
+            radio.reportStart();
+        }
+        else{hasMatchStarted=1;}
+            
     }
 
     if (odom_refresh.check()){//every 10ms
