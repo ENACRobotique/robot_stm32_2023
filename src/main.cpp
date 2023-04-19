@@ -119,98 +119,44 @@ void setup() {
 }
 
 void loop() {
-    // if (digitalRead(TIRETTE)){//si la tirette est là
-    //     colorIsGreen = digitalRead(COLOR);
-    //     if (!digitalRead(POS_BUTTON)){
-    //         buttonPressed = 1;
-    //         lastPressedTimeStamp = millis();
-    //     }
-    //     else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
-    //         buttonPressed=0;
-    //         positionDepart %=5;
-    //         positionDepart++;
-    //         afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
-    //     }
-    // }
-    // if (odomSpamTimer.check()){
-    //     radio.reportPosition();
-    //     radio.reportSpeed();
-    // }
+    radio.update();
 
-    if (odom_refresh.check())
-    {
+    if (digitalRead(TIRETTE)){//si la tirette est là
+        if (!digitalRead(POS_BUTTON)){
+            buttonPressed = 1;
+            lastPressedTimeStamp = millis();
+        }
+        else if ((buttonPressed && (millis()-lastPressedTimeStamp)>10) || (colorIsGreen != digitalRead(COLOR))){
+            colorIsGreen = digitalRead(COLOR);
+            buttonPressed=0;
+            positionDepart %=5;
+            positionDepart++;//Ordre de ces deux opérations délibéré pour avoir un résultat entre 1 et 5
+            afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);// 6 = G et 8 = B, ici on parle le L3375P34K      (-;
+        }
+    }
+
+    if (odom_refresh.check()){//every 10ms
         odom.update();
         holo_control.update();
 
     }
 
-    if (lazytimer.check())
-    {
-        
-        holo_control.set_ptarget(x_pos_order[cmd_order],y_pos_order[cmd_order],teta_pos_order[cmd_order]);
-        //pince.update(CLAW_CLOSED);
-        //afficheur.setNbDisplayed(cmd_order);
+    if (odomSpamTimer.check()){//every 100ms
+        radio.reportPosition();
+        radio.reportSpeed();
+    }
 
+    if (bruhcmd.check())//every second
+    {   digitalToggle(LED_BUILTIN);
+        odom.print_odometry();
+        
+    }
+    if (lazytimer.check())//every 10s
+    {
+        radio.sendMessage("Heart beat",10);
+        holo_control.set_ptarget(x_pos_order[cmd_order],y_pos_order[cmd_order],teta_pos_order[cmd_order]);
         cmd_order = (cmd_order + 1) %4;
     }
-
-    if (bruhcmd.check()) {
-        odom.print_odometry();
-    }
-
-    // if (bruhcmd.check())
-    // {
-
-    //     if(!(arm.getEtatBras() == INITIALISATION))
-    //     {
-
-    //         digitalToggle(LED_BUILTIN);
-    //         switch (procedure%6)
-    //         {
-    //         case 0 :
-    //             arm.toggleBras(0);
-    //             break;
-    //         case 1 :
-    //             arm.toggleBras(3);
-    //             break;
-    //         case 2 :
-    //             arm.toggleMain(1);
-    //             break;
-    //         case 3 :
-    //             arm.toggleBras(0);
-    //             break;
-    //         case 4 :
-    //             arm.toggleBras(3);
-    //             break;
-    //         case 5 :
-    //             arm.toggleMain(0);
-    //             break;    
-            
-    //         default:
-    //             break;
-    //         }
-
-    //         if (arm.IsBrasTargetReach()) {procedure++;};
-            
-    //     };
-    // }
-    
-
-    //plateau.update(cmd[pos%6]);
-
-
-    // if (bruhcmd.check()){ 
-    //     digitalToggle(LED_BUILTIN);
-    //     if (bruhCounter==10){arm.toggleBras(0);}
-    //     else if (bruhCounter==11){arm.toggleMain(1);}
-    //     else if (bruhCounter==12){arm.toggleBras(1);}
-    //     else if (bruhCounter==14){arm.toggleElbow(0);}
-    //     else if (bruhCounter==15){arm.toggleMain(0);}
-    //     else if (bruhCounter==16){arm.toggleElbow(1);bruhCounter=5;}
-    //     bruhCounter++;
-    // }
-    //pince.update(CLAW_OPEN);
-    
 
     
 }

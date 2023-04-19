@@ -29,6 +29,14 @@ typedef enum {
 } messageTypes_t;
 
 
+#define MSG_BUF &buffer[1]
+
+struct msgPos{
+    float x;
+    float y;
+    float theta;
+} __packed;
+
 
 class Comm
 {
