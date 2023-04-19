@@ -360,3 +360,37 @@ void trieuseController2000::getDiscFromPosition (uint8_t pos, int numAction){
     
     }
 }
+
+
+// procédure de ramassage (exemple )
+
+    //     if(!(arm.getEtatBras() == INITIALISATION))
+    //     {
+
+    //         digitalToggle(LED_BUILTIN);
+    //         switch (procedure%6)
+    //         {
+    //         case 0 :
+    //             arm.toggleBras(0);
+    //             break;
+    //         case 1 :
+    //             arm.toggleBras(3);
+    //             break;
+    //         case 2 :
+    //             arm.toggleMain(1);
+    //             break;
+    //         case 3 :
+    //             arm.toggleBras(0);
+    //             break;
+    //         case 4 :
+    //             arm.toggleBras(3);
+    //             break;
+    //         case 5 :
+    //             arm.toggleMain(0);
+    //             break;    
+            
+    //         default:
+    //             break;
+    //         }
+
+    //         if (arm.IsBrasTargetReach()) {procedure++;};

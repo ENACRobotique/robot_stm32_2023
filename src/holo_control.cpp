@@ -59,7 +59,7 @@ void HoloControl::recalc_vtargets_position_tgt(){
 
 
     float dist = distance(x_table_tgt, y_table_tgt, current_x, current_y);
-    float target_speed = (dist>SEUIL_PROCHE? MAX_VITESSE: (dist < 0.02? 0 : MAX_VITESSE_PROCHE));
+    float target_speed = (dist>SEUIL_PROCHE? MAX_VITESSE: (dist < TOL_DIST? 0 : MAX_VITESSE_PROCHE));
     float vx_table = dx / dist * target_speed;
     float vy_table = dy / dist * target_speed;
 

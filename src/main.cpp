@@ -58,7 +58,7 @@ float x_pos_order[5]={-1.125,-1.125,-1.875,-1.875,-1.125};
 float y_pos_order[5]={-0.225,-1.775,-1.775,-0.225,-0.225};
 float teta_pos_order[5]={0.f,0.f,0.f,0.f,0.f};
 int cmd_order;
-float tgt_error=0.15;
+float tgt_error=0.015;
 
 int position = 0;
 float tableau[] = {
@@ -135,6 +135,16 @@ void loop() {
     if (odomSpamTimer.check()){
         radio.reportPosition();
         radio.reportSpeed();
+    }
+
+    if (bruhcmd.check())
+    {
+        odom.update();
+        holo_control.update();
+        if (lazytimer.check())
+        {
+            holo_control.set_ptarget(x_pos_order[cmd_order++%6],y_pos_order[cmd_order++%6],teta_pos_order[cmd_order++%6]);
+        }
     }
 
     //arm.update();

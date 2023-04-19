@@ -46,10 +46,10 @@
 #define MAX_ACCEL 2.0f //m.s^2
 
 
-#define SEUIL_PROCHE 0.3f //m
+#define SEUIL_PROCHE 0.2f //m
 #define MAX_VITESSE 0.65f //m.s^-1
 #define MAX_VITESSE_PROCHE 0.25f //m.s^-1
-#define TOL_DIST 0.02 //m
+#define TOL_DIST 0.005f //m
 
 #define SEUIL_PROCHE_ROTATION 0.2f //rad
 #define TOL_THETA 0.01 //rad
