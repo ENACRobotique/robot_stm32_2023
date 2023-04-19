@@ -119,7 +119,9 @@ void setup() {
 }
 
 void loop() {
+
     radio.update();
+
     if (digitalRead(TIRETTE)){//si la tirette est là
         colorIsGreen = digitalRead(COLOR);
         if (!digitalRead(POS_BUTTON)){
@@ -133,76 +135,33 @@ void loop() {
             afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
         }
     }
-    if (odomSpamTimer.check()){
+    if (odom_refresh.check()){//every 10ms
+        odom.update();
+        holo_control.update();
+
+    }
+
+    if (odomSpamTimer.check()){//every 100ms
         radio.reportPosition();
         radio.reportSpeed();
     }
 
-    if (bruhcmd.check())
+    if (bruhcmd.check())//every second
     {   digitalToggle(LED_BUILTIN);
-        odom.update();
-        holo_control.update();
-        if (lazytimer.check())
-        {
-            radio.sendMessage("Heart beat",10);
-            holo_control.set_ptarget(x_pos_order[cmd_order++%6],y_pos_order[cmd_order++%6],teta_pos_order[cmd_order++%6]);
-        }
+        
     }
-
-    //arm.update();
-
-    // if (bruhcmd.check())
-    // {
-
-    //     if(!(arm.getEtatBras() == INITIALISATION))
-    //     {
-
-    //         digitalToggle(LED_BUILTIN);
-    //         switch (procedure%6)
-    //         {
-    //         case 0 :
-    //             arm.toggleBras(0);
-    //             break;
-    //         case 1 :
-    //             arm.toggleBras(3);
-    //             break;
-    //         case 2 :
-    //             arm.toggleMain(1);
-    //             break;
-    //         case 3 :
-    //             arm.toggleBras(0);
-    //             break;
-    //         case 4 :
-    //             arm.toggleBras(3);
-    //             break;
-    //         case 5 :
-    //             arm.toggleMain(0);
-    //             break;    
-            
-    //         default:
-    //             break;
-    //         }
-
-    //         if (arm.IsBrasTargetReach()) {procedure++;};
-            
-    //     };
-    // }
+    if (lazytimer.check())//every 10s
+    {
+        radio.sendMessage("Heart beat",10);
+        holo_control.set_ptarget(x_pos_order[cmd_order++%6],y_pos_order[cmd_order++%6],teta_pos_order[cmd_order++%6]);
+    }
+        
     
 
-    //plateau.update(cmd[pos%6]);
+    
 
 
-    // if (bruhcmd.check()){ 
-    //     digitalToggle(LED_BUILTIN);
-    //     if (bruhCounter==10){arm.toggleBras(0);}
-    //     else if (bruhCounter==11){arm.toggleMain(1);}
-    //     else if (bruhCounter==12){arm.toggleBras(1);}
-    //     else if (bruhCounter==14){arm.toggleElbow(0);}
-    //     else if (bruhCounter==15){arm.toggleMain(0);}
-    //     else if (bruhCounter==16){arm.toggleElbow(1);bruhCounter=5;}
-    //     bruhCounter++;
-    // }
-    //pince.update(CLAW_OPEN);
+    
     
 
     
