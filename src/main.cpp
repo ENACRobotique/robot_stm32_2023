@@ -11,6 +11,7 @@
 #include "comm.h"
 
 uint8_t hasMatchStarted = 0;
+uint8_t startOfMatchReported = 0;
 DisplayController afficheur = DisplayController();
 DynamixelSerial AX12As;
 Metro odom_refresh(10);
@@ -123,7 +124,8 @@ void loop() {
     
     if (1){//this code will be executed every time. 
         radio.update();
-        if (digitalRead(TIRETTE)){//si la tirette est là
+        if(startOfMatchReported){}//optimisation to keep loop shorter during match, probably not needed
+        else if (digitalRead(TIRETTE)){//si la tirette est là (cas avant début de match)
             if (!digitalRead(POS_BUTTON)){
                 buttonPressed = 1;
                 lastPressedTimeStamp = millis();
@@ -138,8 +140,12 @@ void loop() {
         }
         else if (hasMatchStarted) {
             radio.reportStart();
+            startOfMatchReported=1;
         }
-        else{hasMatchStarted=1;}
+        else{//made that way to read pin twice before match start
+            hasMatchStarted=1;
+            startOfMatchReported=0;
+        }
             
     }
 
