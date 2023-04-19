@@ -119,19 +119,21 @@ void setup() {
 }
 
 void loop() {
-    radio.update();
-
-    if (digitalRead(TIRETTE)){//si la tirette est là
-        if (!digitalRead(POS_BUTTON)){
-            buttonPressed = 1;
-            lastPressedTimeStamp = millis();
-        }
-        else if ((buttonPressed && (millis()-lastPressedTimeStamp)>10) || (colorIsGreen != digitalRead(COLOR))){
-            colorIsGreen = digitalRead(COLOR);
-            buttonPressed=0;
-            positionDepart %=5;
-            positionDepart++;//Ordre de ces deux opérations délibéré pour avoir un résultat entre 1 et 5
-            afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);// 6 = G et 8 = B, ici on parle le L3375P34K      (-;
+    
+    if (1){//this code will be executed every time. 
+        radio.update();
+        if (digitalRead(TIRETTE)){//si la tirette est là
+            if (!digitalRead(POS_BUTTON)){
+                buttonPressed = 1;
+                lastPressedTimeStamp = millis();
+            }
+            else if ((buttonPressed && (millis()-lastPressedTimeStamp)>10) || (colorIsGreen != digitalRead(COLOR))){
+                colorIsGreen = digitalRead(COLOR);
+                buttonPressed=0;
+                positionDepart %=5;
+                positionDepart++;//Ordre de ces deux opérations délibéré pour avoir un résultat entre 1 et 5
+                afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);// 6 = G et 8 = B, ici on parle le L3375P34K      (-;
+            }
         }
     }
 
@@ -151,6 +153,7 @@ void loop() {
         odom.print_odometry();
         
     }
+
     if (lazytimer.check())//every 10s
     {
         radio.sendMessage("Heart beat",10);
