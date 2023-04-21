@@ -55,6 +55,7 @@
 #define TOL_THETA 0.01 //rad
 #define COEF_DAMP_THETA 1.0f 
 #define MAX_VITESSE_ROTATION 2.0f //rad.s^-1
+#define MAX_VITESSE_ROTATION_PROCHE 0.2f //rad.s^-1
 
 #define INTERFACE_DRIVER 1
 #define STEPPER_1_STP PA10

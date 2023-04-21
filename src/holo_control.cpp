@@ -76,10 +76,14 @@ void HoloControl::recalc_vtargets_position_tgt(){
 
     double vtheta;
     if(abs(dtheta)>TOL_THETA) {
+        float maxSpeedAllowed = MAX_VITESSE_ROTATION;
+        if (abs(dtheta) <= SEUIL_PROCHE_ROTATION){
+            maxSpeedAllowed = MAX_VITESSE_ROTATION_PROCHE;
+        }
         if(dtheta>0) {
-             vtheta = MAX_VITESSE_ROTATION;
+             vtheta = maxSpeedAllowed;
         } else {
-             vtheta = -MAX_VITESSE_ROTATION;
+             vtheta = -maxSpeedAllowed;
         }
     } else {
         vtheta = 0;
