@@ -10,11 +10,12 @@
 #include "DisplayController.h"
 #include "comm.h"
 
+
 uint8_t hasMatchStarted = 0;
 uint8_t startOfMatchReported = 0;
 DisplayController afficheur = DisplayController();
 DynamixelSerial AX12As;
-Metro odom_refresh(10);
+Metro odom_refresh(30);
 int bruhCounter=0;
 int buttonPressed;
 uint32_t lastPressedTimeStamp;
@@ -110,11 +111,11 @@ void setup() {
     odom_refresh.reset();
     radio.sendMessage("Odométrie initialisée",23);
     
-    //holo_control.set_ptarget(5, 0.f, 0);
-    odom.set_x(x_pos_order[0]);
-    odom.set_y(y_pos_order[0]);
-    odom.set_theta(teta_pos_order[0]);
-    cmd_order=1;
+    holo_control.set_ptarget(0.5, 0.f, 0);
+    // odom.set_x(x_pos_order[0]);
+    // odom.set_y(y_pos_order[0]);
+    // odom.set_theta(teta_pos_order[0]);
+    // cmd_order=1;
     
 
     
@@ -122,38 +123,40 @@ void setup() {
 
 void loop() {
     
-    if (1){//this code will be executed every time. 
-        radio.update();
-        if(startOfMatchReported){}//optimisation to keep loop shorter during match, probably not needed
-        else if (digitalRead(TIRETTE)){//si la tirette est là (cas avant début de match)
-            if (!digitalRead(POS_BUTTON)){
-                buttonPressed = 1;
-                lastPressedTimeStamp = millis();
-            }
-            else if ((buttonPressed && (millis()-lastPressedTimeStamp)>10) || (colorIsGreen != digitalRead(COLOR))){
-                colorIsGreen = digitalRead(COLOR);
-                buttonPressed=0;
-                positionDepart %=5;
-                positionDepart++;//Ordre de ces deux opérations délibéré pour avoir un résultat entre 1 et 5
-                afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);// 6 = G et 8 = B, ici on parle le L3375P34K      (-;
-            }
-        }
-        else if (hasMatchStarted) {
-            radio.reportStart();
-            startOfMatchReported=1;
-        }
-        else{//made that way to read pin twice before match start
-            hasMatchStarted=1;
-            startOfMatchReported=0;
-        }
+    // if (1){//this code will be executed every time. 
+    //     radio.update();
+    //     if(startOfMatchReported){}//optimisation to keep loop shorter during match, probably not needed
+    //     else if (digitalRead(TIRETTE)){//si la tirette est là (cas avant début de match)
+    //         if (!digitalRead(POS_BUTTON)){
+    //             buttonPressed = 1;
+    //             lastPressedTimeStamp = millis();
+    //         }
+    //         else if ((buttonPressed && (millis()-lastPressedTimeStamp)>10) || (colorIsGreen != digitalRead(COLOR))){
+    //             colorIsGreen = digitalRead(COLOR);
+    //             buttonPressed=0;
+    //             positionDepart %=5;
+    //             positionDepart++;//Ordre de ces deux opérations délibéré pour avoir un résultat entre 1 et 5
+    //             afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);// 6 = G et 8 = B, ici on parle le L3375P34K      (-;
+    //         }
+    //     }
+    //     else if (hasMatchStarted) {
+    //         radio.reportStart();
+    //         startOfMatchReported=1;
+    //     }
+    //     else{//made that way to read pin twice before match start
+    //         hasMatchStarted=1;
+    //         startOfMatchReported=0;
+    //     }
             
-    }
+    // }
+
+    radio.update();
 
     if (odom_refresh.check()){//every 10ms
         odom.update();
         holo_control.update();
-
     }
+
 
     if (odomSpamTimer.check()){//every 100ms
         radio.reportPosition();
@@ -162,16 +165,17 @@ void loop() {
 
     if (bruhcmd.check())//every second
     {   digitalToggle(LED_BUILTIN);
-        odom.print_odometry();
-        
+        //odom.print_odometry();
     }
 
-    if (lazytimer.check())//every 10s
-    {
-        radio.sendMessage("Heart beat",10);
-        holo_control.set_ptarget(x_pos_order[cmd_order],y_pos_order[cmd_order],teta_pos_order[cmd_order]);
-        cmd_order = (cmd_order + 1) %4;
-    }
+    // if (lazytimer.check())//every 10s
+    // {
+    //     radio.sendMessage("Heart beat",10);
+    //     holo_control.set_ptarget(x_pos_order[cmd_order],y_pos_order[cmd_order],teta_pos_order[cmd_order]);
+    //     cmd_order = (cmd_order + 1) %4;
+    //     afficheur.setNbDisplayed(cmd_order);
+
+    // }
 
     
 }
