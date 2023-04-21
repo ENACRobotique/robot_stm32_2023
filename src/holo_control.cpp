@@ -86,7 +86,7 @@ void HoloControl::recalc_vtargets_position_tgt(){
              vtheta = -maxSpeedAllowed;
         }
     } else {
-        vtheta = 0;
+        vtheta = 0.f;
     }
     
 
