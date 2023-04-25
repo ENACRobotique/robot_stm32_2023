@@ -15,7 +15,7 @@ uint8_t hasMatchStarted = 0;
 uint8_t startOfMatchReported = 0;
 DisplayController afficheur = DisplayController();
 DynamixelSerial AX12As;
-Metro odom_refresh(30);
+Metro odom_refresh(40);
 int bruhCounter=0;
 int buttonPressed;
 uint32_t lastPressedTimeStamp;
@@ -111,7 +111,7 @@ void setup() {
     odom_refresh.reset();
     radio.sendMessage("Odométrie initialisée",23);
     
-    holo_control.set_ptarget(0.5, 0.f, 0);
+    //holo_control.set_ptarget(0.5, 0.f, 0);
     // odom.set_x(x_pos_order[0]);
     // odom.set_y(y_pos_order[0]);
     // odom.set_theta(teta_pos_order[0]);
