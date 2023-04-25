@@ -41,7 +41,7 @@ class HoloControl{
         double vx_table_tgt, vy_table_tgt, vtheta_tgt;
         void recalc_vtargets_table_to_holo();
         void recalc_vtargets_position_tgt();
-        int RATIO_SLOW = 1;
+        float ratio_slow = 1.f;
 };
 extern HoloControl holo_control ;
 #endif // HOLO_CONTROL_H

@@ -62,11 +62,11 @@ void HoloControl::recalc_vtargets_position_tgt(){
 
     double target_speed;
     if(dist > SEUIL_PROCHE) {
-        target_speed = MAX_VITESSE/RATIO_SLOW;
+        target_speed = MAX_VITESSE/ratio_slow;
     } else if(dist < TOL_DIST) {
         target_speed = 0;
     } else {
-        target_speed = MAX_VITESSE_PROCHE/RATIO_SLOW;
+        target_speed = MAX_VITESSE_PROCHE/ratio_slow;
     }
 
 
@@ -76,9 +76,9 @@ void HoloControl::recalc_vtargets_position_tgt(){
 
     double vtheta;
     if(abs(dtheta)>TOL_THETA) {
-        float maxSpeedAllowed = MAX_VITESSE_ROTATION;
+        float maxSpeedAllowed = MAX_VITESSE_ROTATION/ratio_slow;
         if (abs(dtheta) <= SEUIL_PROCHE_ROTATION){
-            maxSpeedAllowed = MAX_VITESSE_ROTATION_PROCHE;
+            maxSpeedAllowed = MAX_VITESSE_ROTATION_PROCHE/ratio_slow;
         }
         if(dtheta>0) {
              vtheta = maxSpeedAllowed;
@@ -128,5 +128,5 @@ void HoloControl::update(){
 
 void HoloControl::set_ratio_slow(int32_t ratio)
 {
-    this->RATIO_SLOW = ratio;
+    this->ratio_slow = ratio;
 }
