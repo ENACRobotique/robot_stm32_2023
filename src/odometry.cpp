@@ -1,5 +1,6 @@
 #include "odometry.h"
 #include "math.h"
+#include "comm.h"
 
 void Odometry::update(){
 
@@ -10,6 +11,7 @@ void Odometry::update(){
     //déduire la vitesse en divisant la valeur par la différence de temp millis (arduino .h) - lastMillis
     uint32_t temp_millis = millis();
     double delta_time = static_cast<double>(temp_millis - lastMillis)/1000.0;
+    _delta_time = delta_time;
     // mettre a jour lastmillis
     lastMillis = temp_millis;
     //mettre set val v1,v2,v3
@@ -49,10 +51,9 @@ void Odometry::update(){
 }
 
 
-void Odometry::print_odometry() {
-    Serial.print(x,3);
-    Serial.print("  ");
-    Serial.print(y,3);
-    Serial.print("  ");
-    Serial.println(theta,3);
+void Odometry::print_odometry() 
+{
+    char buffer[50];
+    int size = snprintf(buffer,50,"%.3f  %.3f  %.3f  %f",x,y,theta,_delta_time);
+    radio.sendMessage(buffer,size);    
 }

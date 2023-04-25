@@ -58,6 +58,7 @@ class Odometry{
         void print_odometry();
 
     
+        double _delta_time;
     private:
         double v1, v2, v3;
         double vx_robot, vy_robot, vtheta;
