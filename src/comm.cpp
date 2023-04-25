@@ -197,6 +197,7 @@ void Comm::execCommand(){
             this->cmdStop();
             break;
         case TYPE_SLOW:
+            this->cmdSlow();
             break;
         case TYPE_CLAWS:
             break;
@@ -214,6 +215,7 @@ void Comm::execCommand(){
             this->cmdScore();
             break;
         case TYPE_RESUME:
+            this->cmdResume();
             break;
     }
 }
@@ -273,11 +275,12 @@ void Comm::update()
     }
 }
 
-void Comm::cmdSlow(float factor){
-    holo_control.set_ratio_slow(factor);
+void Comm::cmdSlow(){
+    //float *factor = reinterpret_cast<float*>(MSG_BUF);
+    holo_control.set_ratio_slow(2.f);
 }
 
 void Comm::cmdResume()
 {
-    holo_control.set_ratio_slow(1);
+    holo_control.set_ratio_slow(1.f);
 }

@@ -126,7 +126,7 @@ void HoloControl::update(){
 }
 
 
-void HoloControl::set_ratio_slow(int32_t ratio)
+void HoloControl::set_ratio_slow(float ratio)
 {
     this->ratio_slow = ratio;
 }

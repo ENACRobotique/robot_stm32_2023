@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # hostname ou adresse ip de Cooking Mama
-COOKING_MAMA=cooking-mama
+COOKING_MAMA=10.5.141.1
 
 echo "firmware path: $1"
 

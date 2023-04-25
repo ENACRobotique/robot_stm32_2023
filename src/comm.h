@@ -66,7 +66,7 @@ private:
     void cmdPos();
     void resetPosition();
     void cmdStop();
-    void cmdSlow(float factor);
+    void cmdSlow();
     void cmdClaw();
     void cmdGrab();
     void cmdDrop();
