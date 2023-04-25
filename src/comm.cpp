@@ -273,8 +273,8 @@ void Comm::update()
     }
 }
 
-void Comm::cmdSlow(){
-    holo_control.set_ratio_slow(2);
+void Comm::cmdSlow(float factor){
+    holo_control.set_ratio_slow(factor);
 }
 
 void Comm::cmdResume()

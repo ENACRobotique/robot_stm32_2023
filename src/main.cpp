@@ -83,7 +83,7 @@ void setup() {
     
     radio.sendMessage("Initialisation Bras",19);
     arm.init(&Serial3); // NE PAS METTRE ARM.UPDATE DANS LE SETUP !!! => ÇA PLANTE
-    arm.toggleMain(0);
+    arm.toggleMain(UNGRAB_CHOICE);
     plateau.init();
     plateau.update(PLATE_INIT);
     pince.init();
