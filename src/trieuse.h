@@ -87,7 +87,7 @@ typedef enum
 {
     OPEN_L_POS = 1850,
     OPEN_R_POS = 1000,
-    CLOSED_L_POS = 1080,
+    CLOSED_L_POS = 1100,
     CLOSED_R_POS = 1900,
     GRAB_L = 1500,
     GRAB_R = 1400,

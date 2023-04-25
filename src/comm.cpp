@@ -276,7 +276,6 @@ void Comm::update()
 }
 
 void Comm::cmdSlow(){
-    //float *factor = reinterpret_cast<float*>(MSG_BUF);
     holo_control.set_ratio_slow(2.f);
 }
 
