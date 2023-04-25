@@ -49,7 +49,7 @@ class Odometry{
 
         double get_x(){return x;};
         double get_y(){return y;};
-        double get_theta(){return theta;};
+        double get_theta(){return fmod(theta,2*PI);};
 
         void set_x(double x){this->x = x;};
         void set_y(double y){this->y = y;};
