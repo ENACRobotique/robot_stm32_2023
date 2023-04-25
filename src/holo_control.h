@@ -24,6 +24,7 @@ class HoloControl{
         void set_ptarget(double x, double y, double theta); // TODO
 
         void update();
+        void set_ratio_slow(int32_t ratio);
 
     private:
         const Eigen::Matrix3d axis_to_motors 
@@ -40,6 +41,7 @@ class HoloControl{
         double vx_table_tgt, vy_table_tgt, vtheta_tgt;
         void recalc_vtargets_table_to_holo();
         void recalc_vtargets_position_tgt();
+        int RATIO_SLOW = 1;
 };
 extern HoloControl holo_control ;
 #endif // HOLO_CONTROL_H

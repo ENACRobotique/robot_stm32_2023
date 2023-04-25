@@ -272,3 +272,12 @@ void Comm::update()
             break;
     }
 }
+
+void Comm::cmdSlow(){
+    holo_control.set_ratio_slow(2);
+}
+
+void Comm::cmdResume()
+{
+    holo_control.set_ratio_slow(1);
+}

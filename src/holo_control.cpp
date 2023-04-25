@@ -62,11 +62,11 @@ void HoloControl::recalc_vtargets_position_tgt(){
 
     double target_speed;
     if(dist > SEUIL_PROCHE) {
-        target_speed = MAX_VITESSE;
+        target_speed = MAX_VITESSE/RATIO_SLOW;
     } else if(dist < TOL_DIST) {
         target_speed = 0;
     } else {
-        target_speed = MAX_VITESSE_PROCHE;
+        target_speed = MAX_VITESSE_PROCHE/RATIO_SLOW;
     }
 
 
@@ -123,4 +123,10 @@ void HoloControl::update(){
     m1->update(odom->get_v1speed());
     m2->update(odom->get_v2speed());
     m3->update(odom->get_v3speed());
+}
+
+
+void HoloControl::set_ratio_slow(int32_t ratio)
+{
+    this->RATIO_SLOW = ratio;
 }
