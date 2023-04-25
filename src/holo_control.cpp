@@ -115,7 +115,7 @@ void HoloControl::update(){
         recalc_vtargets_table_to_holo();
         cmd_mode = POSTABLE; // seems stupid, but keep this line, otherwise cmd_mode gets erased to VHOLO
         //Sotp if close to destination
-        if (distance(x_table_tgt, y_table_tgt, odom->get_x(), odom->get_y()) < TOL_DIST && abs(theta_tgt - odom->get_theta()) < TOL_THETA) {
+        if (distance(x_table_tgt, y_table_tgt, odom->get_x(), odom->get_y()) < TOL_DIST && abs(fmod(theta_tgt,PI) - fmod(odom->get_theta(),PI)) < TOL_THETA) {
             this->stop();
         }
     }
