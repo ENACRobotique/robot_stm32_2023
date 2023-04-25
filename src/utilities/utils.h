@@ -9,3 +9,14 @@ T clamp(T inf, T sup, T x) {
 inline float distance(float x1, float y1, float x2, float y2) {
     return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 }
+
+template <typename T>
+inline T normalized(T theta) {
+    while(theta < -PI) {
+        theta += 2*PI;
+    }
+    while(theta > PI) {
+        theta -= 2*PI;
+    }
+    return theta;
+}

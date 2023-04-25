@@ -1,5 +1,6 @@
 #include "holo_control.h"
 #include "motor_control.h"
+#include "utilities/utils.h"
 
 HoloControl::HoloControl(MotorController *m1_, MotorController *m2_, MotorController *m3_, Odometry *odom_) : 
     m1(m1_), m2(m2_), m3(m3_), odom(odom_) {
@@ -55,7 +56,7 @@ void HoloControl::recalc_vtargets_position_tgt(){
     double current_theta = odom->get_theta();
     double dx = x_table_tgt - current_x;
     double dy = y_table_tgt - current_y;
-    double dtheta = theta_tgt - current_theta;
+    double dtheta = normalized(theta_tgt - current_theta);
 
 
     double dist = distance(x_table_tgt, y_table_tgt, current_x, current_y);
@@ -69,9 +70,11 @@ void HoloControl::recalc_vtargets_position_tgt(){
         target_speed = MAX_VITESSE_PROCHE/ratio_slow;
     }
 
-
-    double vx_table = dx / dist * target_speed;
-    double vy_table = dy / dist * target_speed;
+    // double vx_table = dx / dist * target_speed;
+    // double vy_table = dy / dist * target_speed;
+    double azimut = atan2(dy, dx);
+    double vx_table = cos(azimut) * target_speed;
+    double vy_table = sin(azimut) * target_speed;
 
 
     double vtheta;
@@ -98,7 +101,7 @@ void HoloControl::recalc_vtargets_position_tgt(){
 void HoloControl::set_ptarget(double x, double y, double theta){
     x_table_tgt = x;
     y_table_tgt = y;
-    theta_tgt = theta;
+    theta_tgt = normalized(theta);
     recalc_vtargets_position_tgt();
     cmd_mode = POSTABLE;
 }

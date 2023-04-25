@@ -6,6 +6,7 @@
 #include <ArduinoEigen.h>
 #include "math.h"
 #include "Arduino.h"
+#include "utilities/utils.h"
 
 class Odometry{
     public:
@@ -49,7 +50,7 @@ class Odometry{
 
         double get_x(){return x;};
         double get_y(){return y;};
-        double get_theta(){return fmod(theta,2*PI);};
+        double get_theta(){return normalized(theta);};
 
         void set_x(double x){this->x = x;};
         void set_y(double y){this->y = y;};
