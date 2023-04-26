@@ -56,6 +56,7 @@ plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
 int disk;
 bool main_state;
 int procedure;
+char hasMatchStated =0;
 //loop (assiete_V_5 -> assiette_B_5 -> assiette_V_2 -> assiette B_2 -> assiette_V_5)
 double x_pos_order[4]={1.125, 1.125, 1.875, 1.875};
 double y_pos_order[4]={0, 2.5, 1.775, 0.225};
@@ -151,6 +152,22 @@ void loop() {
     // }
 
     radio.update();
+
+    if (digitalRead(TIRETTE)){//si la tirette est là
+        colorIsGreen = digitalRead(COLOR);
+        if (!digitalRead(POS_BUTTON)){
+            buttonPressed = 1;
+            lastPressedTimeStamp = millis();
+        }else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
+            buttonPressed=0;
+            positionDepart %=5;
+            positionDepart++;
+            afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
+        }
+    }else if (!hasMatchStated){
+        hasMatchStated =1;
+        radio.reportStart();
+    }
 
     if (odom_refresh.check()){//every 10ms
         odom.update();
