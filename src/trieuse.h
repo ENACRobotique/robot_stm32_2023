@@ -16,6 +16,12 @@ typedef enum{
 } elbowState_t;
 
 typedef enum{
+    INWARDS_CHOICE = 0 ,
+    OUTWARDS_CHOICE = 1,
+    IDLE_ELBOW_CHOICE = 2
+} elbowChoice_t;
+
+typedef enum{
     INITIALISATION,
     IDLE_BRAS,
     UP=-10,
@@ -27,16 +33,33 @@ typedef enum{
 }armState_t;
 
 typedef enum{
+    UP_CHOICE = 0,
+    GRAB_INTERNE_UP_CHOICE = 1, 
+    GRAB_INTERNE_MIDDLE_CHOICE =2,
+    GRAB_INTERNE_DOWN_CHOICE =3,
+    GRAB_EXTERNE_CHOICE =4,
+    DOWN_CHOICE =5,
+}armChoice_t;
+
+typedef enum{
     IDLE_MAIN,
     UNGRAB_MAIN=500,
     GRAB_MAIN=350
 }handState_t;
 
+typedef enum
+{
+    UNGRAB_CHOICE = 0,
+    GRAB_CHOICE = 1,
+    DEFAULT_CHOICE = 2,
+
+}handChoice_t;
+
 //plateau
 typedef enum 
 {
     PLATE_INIT = -1,
-    POS_ONE = 0,
+    POS_ONE = 1,
     POS_TWO,
     POS_THREE,
     POS_FOUR,
@@ -64,7 +87,7 @@ typedef enum
 {
     OPEN_L_POS = 1850,
     OPEN_R_POS = 1000,
-    CLOSED_L_POS = 1080,
+    CLOSED_L_POS = 1100,
     CLOSED_R_POS = 1900,
     GRAB_L = 1500,
     GRAB_R = 1400,
@@ -82,13 +105,14 @@ typedef enum
 class ARM
 {
     public :
+        ARM();
         ARM(int PinFinCourse, int NumStepper, int idAX12Elbow, int idAX12Main,DynamixelSerial* AX12As); // + servo + ax12
         void init(HardwareSerial *serialDynamixel);
-        void toggleBras(int choice); // de 1 à 8 pour du plus haut au plus bas
+        void toggleBras(armChoice_t choice); // de 1 à 8 pour du plus haut au plus bas
                                          //l'endroit où le bras n'est pas.
-        void toggleElbow(int choice = 2);// 0 pour l'intérieur, 1 pour l'extérieur, le 
+        void toggleElbow(elbowChoice_t choice = IDLE_ELBOW_CHOICE);// 0 pour l'intérieur, 1 pour l'extérieur, le 
                                          //reste por une valeur par défaut
-        void toggleMain(int choice=2);   // 0 pour lâcher, 1 pour attraper, le 
+        void toggleMain(handChoice_t choice=DEFAULT_CHOICE);   // 0 pour lâcher, 1 pour attraper, le 
                                          //reste por une valeur par défaut
         void update();
         armState_t getEtatBras();
@@ -111,6 +135,7 @@ class ARM
 class PLATE
 {
     public :
+        PLATE();
         PLATE(int num_stepper, int pin_zero); // stepper + fin de course
         void init();
         void update(plate_pos position); // rotation a sens unique
@@ -129,6 +154,7 @@ class PLATE
 class CLAW
 {
     public:
+        CLAW();
         CLAW(int pin_servo_gauche, int pin_servo_droite);
         void init();
         void update(claw_state state);
@@ -173,6 +199,7 @@ typedef enum{
 }dropDiscState_t;
 class trieuseController2000{
     public :
+        trieuseController2000(CLAW claw,PLATE plate,ARM arm);
         void update();
         void storeDiscsToPostion (uint8_t pos, int numAction);
         void getDiscFromPosition (uint8_t pos, int numAction);
@@ -182,10 +209,14 @@ class trieuseController2000{
         void updateGrabLoop();
         int disqueEnStock[3]={0,0,0};
         int _numeroAction = 0 ;
-        int targetPos;
+        plate_pos targetPos;
         trieuseControllerDirectives_t etatGeneral=IDLE_TC;
         grabDiscsStates_t etatMachineEtatGrab;
         dropDiscState_t etatMachineEtatDrop;
+        CLAW _claw;
+        PLATE _plate;
+        ARM _arm;
+        
 
 };
 #endif

@@ -17,13 +17,14 @@ class HoloControl{
     public:
         HoloControl(MotorController *m1, MotorController *m2, MotorController *m3, Odometry *odom); // include MotorControl objects when they are implemented
         void stop(); // stop all motors (could be an alias for set_vtarget(0,0,0))
-        void set_vtarget_raw(float v1, float v2, float v3);
-        void set_vtarget_holo(float vx_robot, float vy_robot, float vtheta);
+        void set_vtarget_raw(double v1, double v2, double v3);
+        void set_vtarget_holo(double vx_robot, double vy_robot, double vtheta);
 
-        void set_vtarget_table(float vx_table, float vy_table, float vtheta); // TO TEST
-        void set_ptarget(float x, float y, float theta); // TODO
+        void set_vtarget_table(double vx_table, double vy_table, double vtheta); // TO TEST
+        void set_ptarget(double x, double y, double theta); // TODO
 
         void update();
+        void set_ratio_slow(float ratio);
 
     private:
         const Eigen::Matrix3d axis_to_motors 
@@ -36,10 +37,11 @@ class HoloControl{
 
         //add attributes to store target position, and associated parameters, plus PIDs
         int cmd_mode;
-        float x_table_tgt, y_table_tgt, theta_tgt;
-        float vx_table_tgt, vy_table_tgt, vtheta_tgt;
+        double x_table_tgt, y_table_tgt, theta_tgt;
+        double vx_table_tgt, vy_table_tgt, vtheta_tgt;
         void recalc_vtargets_table_to_holo();
         void recalc_vtargets_position_tgt();
+        float ratio_slow = 1.f;
 };
 extern HoloControl holo_control ;
 #endif // HOLO_CONTROL_H

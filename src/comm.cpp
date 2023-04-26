@@ -10,7 +10,7 @@
 // Analyse des informations contenues dans les messages SerialCom
 void Comm::cmdStop(){// Stops the robot
         holo_control.stop();
-        SerialCom.println("M Stopping robot.");
+        SerialCom.println("\n\nM Stopping robot.");
 }
 
 // Recale le robot sur la postion déduite du lidar
@@ -21,19 +21,26 @@ void Comm::resetPosition(){
     odom.set_x(msg->x);
     odom.set_y(msg->y);
     odom.set_theta(msg->theta);
+    SerialCom.println("\n\nM Robot position reseted.");
 }
 
 //Ordre de position
 void Comm::cmdPos(){
     struct msgPos *msg = reinterpret_cast<struct msgPos *>(MSG_BUF);
     holo_control.set_ptarget(msg->x, msg->y, msg->theta);
+    SerialCom.println("\n\nMPos order acknowleged");
+
 }
 
 // Affiche nombre donné dans message
 void Comm::cmdScore(){
-    afficheur.setNbDisplayed(*((uint8_t*)(buffer+1)));
-    SerialCom.print("\n\nMAfficheur affiche ");
-    SerialCom.println(*((uint8_t*)(buffer+1)));
+    afficheur.setNbDisplayed(buffer[1]);
+    //SerialCom.print("\n\nMAfficheur affiche ");
+    //SerialCom.println(*((uint8_t*)(buffer+1)));
+
+    char txt[20];
+    int len = snprintf(txt, 20, "afficheur, %d", buffer[1]);
+    sendMessage(txt, len);
 }
 
 //Send arbitrary string for debug purposes
@@ -92,9 +99,9 @@ void Comm::reportSpeed(){
     char message[] = "\n\nv*************";
     uint8_t sum='v'+this->PROTOCOL_VERSION;
     struct msgPos speed = {
-        .x = odom.get_vx(),
-        .y = odom.get_vy(),
-        .theta = odom.get_vtheta(),
+        .x = static_cast<float>(odom.get_vx()),
+        .y = static_cast<float>(odom.get_vy()),
+        .theta = static_cast<float>(odom.get_vtheta()),
     };
     memcpy(&message[3], &speed, sizeof(struct msgPos));
     for (int i=3; i<15;i++){
@@ -190,6 +197,7 @@ void Comm::execCommand(){
             this->cmdStop();
             break;
         case TYPE_SLOW:
+            this->cmdSlow();
             break;
         case TYPE_CLAWS:
             break;
@@ -207,6 +215,7 @@ void Comm::execCommand(){
             this->cmdScore();
             break;
         case TYPE_RESUME:
+            this->cmdResume();
             break;
     }
 }
@@ -264,4 +273,13 @@ void Comm::update()
             }
             break;
     }
+}
+
+void Comm::cmdSlow(){
+    holo_control.set_ratio_slow(2.f);
+}
+
+void Comm::cmdResume()
+{
+    holo_control.set_ratio_slow(1.f);
 }

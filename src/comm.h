@@ -67,7 +67,7 @@ private:
     void resetPosition();
     void cmdStop();
     void cmdSlow();
-    void cmdclaw();
+    void cmdClaw();
     void cmdGrab();
     void cmdDrop();
     void cmdTurbine();
