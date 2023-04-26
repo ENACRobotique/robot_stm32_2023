@@ -53,6 +53,7 @@ plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
 int disk;
 bool main_state;
 int procedure;
+char hasMatchStated =0;
 //loop (assiete_V_5 -> assiette_B_5 -> assiette_V_2 -> assiette B_2 -> assiette_V_5)
 float x_pos_order[5]={-1.125,-1.125,-1.875,-1.875,-1.125};
 float y_pos_order[5]={-0.225,-1.775,-1.775,-0.225,-0.225};
@@ -127,14 +128,17 @@ void loop() {
         if (!digitalRead(POS_BUTTON)){
             buttonPressed = 1;
             lastPressedTimeStamp = millis();
-        }
-        else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
+        }else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
             buttonPressed=0;
             positionDepart %=5;
             positionDepart++;
             afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
         }
+    }else if (!hasMatchStated){
+        hasMatchStated =1;
+        radio.reportStart();
     }
+
     if (odom_refresh.check()){//every 10ms
         odom.update();
         holo_control.update();
