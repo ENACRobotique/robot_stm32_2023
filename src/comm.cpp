@@ -6,6 +6,7 @@
 #include "config.h"
 #include "holo_control.h"
 #include "odometry.h" 
+#include "trieuse.h"
 
 // Analyse des informations contenues dans les messages SerialCom
 void Comm::cmdStop(){// Stops the robot
@@ -41,6 +42,22 @@ void Comm::cmdScore(){
     char txt[20];
     int len = snprintf(txt, 20, "afficheur, %d", buffer[1]);
     sendMessage(txt, len);
+}
+
+//Commande pour les griffes
+void Comm::cmdClaw(){
+    claw_state etatGriffes = (claw_state) buffer[1];
+    switch (etatGriffes)
+    {
+    case CLAW_CLOSED:
+    case CLAW_OPEN:
+    case CLAW_GRAB:
+        pince.update(etatGriffes);
+        break;
+    
+    default:
+        break;
+    }
 }
 
 //Send arbitrary string for debug purposes
@@ -200,6 +217,7 @@ void Comm::execCommand(){
             this->cmdSlow();
             break;
         case TYPE_CLAWS:
+            this->cmdClaw();
             break;
         case TYPE_GRAB_DISKS:
             break;

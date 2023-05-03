@@ -96,9 +96,9 @@ typedef enum
 
 typedef enum
 {
-    CLAW_CLOSED = 0,
-    CLAW_OPEN = 1,
-    CLAW_GRAB = 2,
+    CLAW_CLOSED = 'c',
+    CLAW_OPEN = 'o',
+    CLAW_GRAB = 'g',
 }claw_state;
 
 //Bras
@@ -167,6 +167,7 @@ class CLAW
         bool _state;
 
 };
+extern CLAW pince;
 //trieuseController2000
 typedef enum {
     IDLE_TC,

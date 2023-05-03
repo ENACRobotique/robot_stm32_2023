@@ -43,7 +43,7 @@
 // si le robot tourne trop -> baisser le rayon
 #define RAYON 0.1314 //m
 
-#define MAX_ACCEL 2.0f //m.s^2
+#define MAX_ACCEL 1.0f //m.s^2
 
 
 #define SEUIL_PROCHE 0.2f //m

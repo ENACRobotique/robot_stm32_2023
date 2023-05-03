@@ -1,5 +1,6 @@
 #ifndef ENCODER_H 
 #define ENCODER_H
+#include<inttypes.h>
 
 
 class Encoder{
@@ -8,6 +9,7 @@ class Encoder{
         
         int get_value();
         void init();
+        int32_t counterTotal;
 
     private:
         int pinA;
