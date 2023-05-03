@@ -458,3 +458,32 @@ void trieuseController2000::updateGrabLoop(){}
     //         }
 
     //         if (arm.IsBrasTargetReach()) {procedure++;};
+
+
+
+
+Toboggan::Toboggan(int pin_servo_toboggan)
+{
+    this->_pin_servo_tobogan = pin_servo_toboggan;
+}
+
+void Toboggan::init()
+{
+    this->_Servo_toboggan.attach(_pin_servo_tobogan);
+    switch_state(CLOSED_TOBOGGAN_STATE);
+}
+
+void Toboggan::switch_state(toboggan_state_t cible)
+{
+    switch(cible)
+    {
+        case OPEN_TOBOGGAN_STATE :
+            _Servo_toboggan.writeMicroseconds(OPEN_TOBOGGAN_VAL); 
+            break;
+
+        case CLOSED_TOBOGGAN_STATE :
+            _Servo_toboggan.writeMicroseconds(CLOSED_TOBOGGAN_VAL); 
+            break ;
+
+    }
+}

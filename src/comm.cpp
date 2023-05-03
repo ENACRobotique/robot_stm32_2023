@@ -46,13 +46,12 @@ void Comm::cmdScore(){
 
 //Commande pour les griffes
 void Comm::cmdClaw(){
-    claw_state etatGriffes = (claw_state) buffer[1];
-    switch (etatGriffes)
+    switch (buffer[1])
     {
     case CLAW_CLOSED:
     case CLAW_OPEN:
     case CLAW_GRAB:
-        pince.update(etatGriffes);
+        pince.update((claw_state)buffer[1]);
         break;
     
     default:
@@ -228,6 +227,7 @@ void Comm::execCommand(){
         case TYPE_ACTIVATE_COSTUME:
             break;
         case TYPE_DROP_CHERRY_SLIDE:
+            this->cmdSlide();
             break;
         case TYPE_DISPLAY_POINTS:
             this->cmdScore();
@@ -275,7 +275,7 @@ void Comm::update()
                     this->execCommand();
                 }
                 else {
-                    Serial.println("\n\nMChecksum error!");
+                    SerialCom.println("\n\nMChecksum error!");
                 }
                 this->etatRadio=IDLE;
             }
@@ -293,11 +293,24 @@ void Comm::update()
     }
 }
 
-void Comm::cmdSlow(){
-    holo_control.set_ratio_slow(2.f);
-}
+void Comm::cmdSlow(){holo_control.set_ratio_slow(2.f);}
 
-void Comm::cmdResume()
+void Comm::cmdResume(){holo_control.set_ratio_slow(1.f);}
+
+void Comm::cmdSlide()
 {
-    holo_control.set_ratio_slow(1.f);
+    char bufEnvoi[20]=" ";
+    int n = snprintf(bufEnvoi,20,"Tobbogan : %c",buffer[1]);
+    radio.sendMessage(bufEnvoi,n);
+    switch (buffer[1])
+    {
+    case CLOSED_TOBOGGAN_STATE:
+    case OPEN_TOBOGGAN_STATE:
+        toboggan.switch_state((toboggan_state_t)buffer[1]);
+        break;
+
+    default:
+        break;
+    }
+    
 }

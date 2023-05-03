@@ -220,4 +220,30 @@ class trieuseController2000{
         
 
 };
+
+
+typedef enum{ // a changer 
+    OPEN_TOBOGGAN_VAL = 1000,
+    CLOSED_TOBOGGAN_VAL = 2000,
+}toboggan_pos;
+typedef enum{
+    OPEN_TOBOGGAN_STATE = 'r',
+    CLOSED_TOBOGGAN_STATE = 's',
+}toboggan_state_t;
+
+
+class Toboggan
+{
+    public :
+        Toboggan(int pin_servo_tobogan);
+        void init();
+        void switch_state(toboggan_state_t open);
+
+    private:
+        int _pin_servo_tobogan;
+        Servo _Servo_toboggan;
+};
+
+extern Toboggan toboggan;
+
 #endif

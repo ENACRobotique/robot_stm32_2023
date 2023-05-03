@@ -10,7 +10,7 @@
 #include "DisplayController.h"
 #include "comm.h"
 
-
+Toboggan toboggan(SERVO_3);
 uint8_t hasMatchStarted = 0;
 uint8_t startOfMatchReported = 0;
 DisplayController afficheur = DisplayController();
@@ -51,7 +51,7 @@ CLAW pince(SERVO_2, SERVO_1);
 claw_state state[3] = {CLAW_CLOSED,CLAW_OPEN,CLAW_GRAB};
 PLATE plateau(1,FIN_COURSE_1);
 plate_pos cmd[6] ={POS_ONE, POS_TWO, POS_THREE, POS_FOUR, POS_FIVE, POS_SIX};
-
+toboggan_state_t tob[2] = {OPEN_TOBOGGAN_STATE, CLOSED_TOBOGGAN_STATE};
 
 int disk;
 bool main_state;
@@ -73,6 +73,7 @@ double tableau[] = {
 };
 
 void setup() {
+    toboggan.init();
     pinMode(TIRETTE, INPUT_PULLUP);
     pinMode(COLOR, INPUT_PULLUP);
     pinMode(POS_BUTTON,INPUT_PULLUP);
@@ -116,7 +117,7 @@ void setup() {
     // odom.set_x(x_pos_order[0]);
     // odom.set_y(y_pos_order[0]);
     // odom.set_theta(teta_pos_order[0]);
-    // cmd_order=1;
+    cmd_order=0;
     
 
     
@@ -124,6 +125,32 @@ void setup() {
 
 void loop() {
     
+    // if (1){//this code will be executed every time. 
+    //     radio.update();
+    //     if(startOfMatchReported){}//optimisation to keep loop shorter during match, probably not needed
+    //     else if (digitalRead(TIRETTE)){//si la tirette est là (cas avant début de match)
+    //         if (!digitalRead(POS_BUTTON)){
+    //             buttonPressed = 1;
+    //             lastPressedTimeStamp = millis();
+    //         }
+    //         else if ((buttonPressed && (millis()-lastPressedTimeStamp)>10) || (colorIsGreen != digitalRead(COLOR))){
+    //             colorIsGreen = digitalRead(COLOR);
+    //             buttonPressed=0;
+    //             positionDepart %=5;
+    //             positionDepart++;//Ordre de ces deux opérations délibéré pour avoir un résultat entre 1 et 5
+    //             afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);// 6 = G et 8 = B, ici on parle le L3375P34K      (-;
+    //         }
+    //     }
+    //     else if (hasMatchStarted) {
+    //         radio.reportStart();
+    //         startOfMatchReported=1;
+    //     }
+    //     else{//made that way to read pin twice before match start
+    //         hasMatchStarted=1;
+    //         startOfMatchReported=0;
+    //     }
+            
+    // }
 
     radio.update();
 
@@ -156,9 +183,7 @@ void loop() {
 
     if (bruhcmd.check())//every second
     {   digitalToggle(LED_BUILTIN);
-        char buffer [100];
-        int n=snprintf(buffer, 100, "Enc1 : %d\tEnc2 : %d\tEnc3 : %d",encoder1.counterTotal, encoder2.counterTotal, encoder3.counterTotal);
-        radio.sendMessage(buffer,n);
+        //toboggan.switch_state(tob[cmd_order++%2]);
         //odom.print_odometry();
     }
 
