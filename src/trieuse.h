@@ -99,6 +99,7 @@ typedef enum
     CLAW_CLOSED = 'c',
     CLAW_OPEN = 'o',
     CLAW_GRAB = 'g',
+    CLAW_CHECK_PRESENCE ='C',
 }claw_state;
 
 //Bras
