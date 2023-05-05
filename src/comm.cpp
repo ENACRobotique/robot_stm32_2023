@@ -48,17 +48,14 @@ void Comm::cmdScore(){
 void Comm::cmdClaw(){
     switch (buffer[1])
     {
+    case CLAW_CHECK_PRESENCE:
+        this->report_cake_presence(pince.check_presence());
+        break;
     case CLAW_CLOSED:
     case CLAW_OPEN:
     case CLAW_GRAB:
         pince.update((claw_state)buffer[1]);
         break;
-    case CLAW_CHECK_PRESENCE:
-        //dist sensor func ...
-        // if true =>  report ok  
-        // else report not ok
-        break;
-    
     default:
         break;
     }
