@@ -75,4 +75,6 @@
 
 #define ANGLE_PLAT -2.435257905307688
 
+#define DIST_DETECT_PALET 80 //distance à laquelle le capteur de proxi voit les palets
+
 #endif // CONFIG_HEADER

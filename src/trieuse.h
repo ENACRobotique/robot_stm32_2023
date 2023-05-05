@@ -5,8 +5,8 @@
 #include <AccelStepper.h>
 #include "AX12A.h"
 #include <Servo.h>
-#include <AccelStepper.h>
-
+#include <Wire.h>
+#include <VL6180X.h>
 
 //bras
 typedef enum{
@@ -150,7 +150,6 @@ class PLATE
         int _position;
 
 };
-
 class CLAW
 {
     public:
@@ -158,6 +157,7 @@ class CLAW
         CLAW(int pin_servo_gauche, int pin_servo_droite);
         void init();
         void update(claw_state state);
+        bool check_presence();
     
     private:
         Servo _Servo_Gauche;
@@ -165,6 +165,8 @@ class CLAW
         int _pin_servo_gauche;
         int _pin_servo_droite;
         bool _state;
+        VL6180X proximity_sensor;
+
 
 };
 extern CLAW pince;

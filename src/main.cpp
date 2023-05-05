@@ -10,6 +10,8 @@
 #include "DisplayController.h"
 #include "comm.h"
 
+#include <Wire.h>
+
 Toboggan toboggan(SERVO_3);
 uint8_t hasMatchStarted = 0;
 uint8_t startOfMatchReported = 0;
@@ -155,7 +157,7 @@ void loop() {
     radio.update();
 
     if (digitalRead(TIRETTE)){//si la tirette est là
-        colorIsGreen = digitalRead(COLOR);
+        colorIsGreen = (!digitalRead(COLOR));
         if (!digitalRead(POS_BUTTON)){
             buttonPressed = 1;
             lastPressedTimeStamp = millis();
