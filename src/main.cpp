@@ -175,6 +175,7 @@ void loop() {
     if (odom_refresh.check()){//every 10ms
         odom.update();
         holo_control.update();
+        odom.print_odometry();
     }
 
 
@@ -187,6 +188,7 @@ void loop() {
     {   digitalToggle(LED_BUILTIN);
         //toboggan.switch_state(tob[cmd_order++%2]);
         //odom.print_odometry();
+        
     }
 
     // if (lazytimer.check())//every 10s

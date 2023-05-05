@@ -47,7 +47,7 @@ public:
     void reportPosition();                              //sends position (x, y, theta) to raspy
     void reportSpeed();                                 //sends speeds (Vx, Vy, Vtheta) to raspy
     void sendMessage (char const * message, size_t size);         //send debug Message
-
+    void report_cake_presence(int is_cake);
 private:
     //Attributs
     //Serial2 for usb, Serial3 for Xbee

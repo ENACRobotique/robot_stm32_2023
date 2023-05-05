@@ -53,7 +53,11 @@ void Odometry::update(){
 
 void Odometry::print_odometry() 
 {
-    char buffer[50];
-    int size = snprintf(buffer,50,"%.3f  %.3f  %.3f  %f",x,y,theta,_delta_time);
+    char buffer[50]="tototototottototototototototototo";
+    int x = (this->x *1000.0);
+    int y = (this->y *1000.0);
+    int theta = (this->theta *180.0/3.1415);
+    int deltaT = (this->_delta_time *1000.0);
+    int size = snprintf(buffer,50,"%d\t%d\t%d\t%d",x,y,theta,deltaT);
     radio.sendMessage(buffer,size);    
 }

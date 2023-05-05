@@ -53,6 +53,11 @@ void Comm::cmdClaw(){
     case CLAW_GRAB:
         pince.update((claw_state)buffer[1]);
         break;
+    case CLAW_CHECK_PRESENCE:
+        //dist sensor func ...
+        // if true =>  report ok  
+        // else report not ok
+        break;
     
     default:
         break;
@@ -125,6 +130,12 @@ void Comm::reportSpeed(){
     }
     message[15]=sum;
     SerialCom.write(message,16);
+}
+void Comm::report_cake_presence(int is_cake){
+    char message[] = "\n\nC**";
+    message[3]=is_cake%256;
+    message[4]='C'+this->PROTOCOL_VERSION+message[3];
+    SerialCom.write(message,5);
 }
 
 void Comm::setType(char c){
