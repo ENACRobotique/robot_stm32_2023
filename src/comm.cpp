@@ -11,6 +11,7 @@
 // Analyse des informations contenues dans les messages SerialCom
 void Comm::cmdStop(){// Stops the robot
         holo_control.stop();
+        holo_control.set_ratio_slow(0.f);
         SerialCom.println("\n\nM Stopping robot.");
 }
 
@@ -301,7 +302,7 @@ void Comm::update()
     }
 }
 
-void Comm::cmdSlow(){holo_control.set_ratio_slow(2.f);}
+void Comm::cmdSlow(){holo_control.set_ratio_slow(0.5f);}
 
 void Comm::cmdResume(){holo_control.set_ratio_slow(1.f);}
 
