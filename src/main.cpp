@@ -165,7 +165,6 @@ void loop() {
     //     cmd_order = (cmd_order + 1) %4;
     //     afficheur.setNbDisplayed(cmd_order);
 
-    // }
-
-    
+    // }   
+}
 }
