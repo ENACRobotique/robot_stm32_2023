@@ -136,7 +136,7 @@ void loop() {
             positionDepart %=5;
             positionDepart++;
         }
-
+    }
     if (odom_refresh.check()){//every 10ms
         odom.update();
         holo_control.update();
@@ -166,5 +166,4 @@ void loop() {
     //     afficheur.setNbDisplayed(cmd_order);
 
     // }   
-}
 }
