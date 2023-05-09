@@ -12,9 +12,9 @@
 
 #include <Wire.h>
 
+Color_t col;
+TiretteState_t tiretteState;
 Toboggan toboggan(SERVO_3);
-uint8_t hasMatchStarted = 0;
-uint8_t startOfMatchReported = 0;
 DisplayController afficheur = DisplayController();
 DynamixelSerial AX12As;
 Metro odom_refresh(40);
@@ -22,7 +22,6 @@ int bruhCounter=0;
 int buttonPressed;
 uint32_t lastPressedTimeStamp;
 int positionDepart=1;
-int colorIsGreen;
 Metro odomSpamTimer(100);
 Metro bruhcmd(1000);
 Metro lazytimer(10000);
@@ -129,7 +128,6 @@ void loop() {
     radio.update();
 
     if (digitalRead(TIRETTE)){//si la tirette est là
-        colorIsGreen = (!digitalRead(COLOR));
         if (!digitalRead(POS_BUTTON)){
             buttonPressed = 1;
             lastPressedTimeStamp = millis();
@@ -137,12 +135,7 @@ void loop() {
             buttonPressed=0;
             positionDepart %=5;
             positionDepart++;
-            afficheur.setNbDisplayed((colorIsGreen?6000:8000)+positionDepart);
         }
-    }else if (!hasMatchStated){
-        hasMatchStated =1;
-        radio.reportStart();
-    }
 
     if (odom_refresh.check()){//every 10ms
         odom.update();
@@ -157,6 +150,9 @@ void loop() {
 
     if (bruhcmd.check())//every second
     {   digitalToggle(LED_BUILTIN);
+        tiretteState = digitalRead(TIRETTE) ? DEDANS : ENLEVEE;
+        col = digitalRead(COLOR) ? BLUE : GREEN;
+        radio.reportTirette(tiretteState,col,positionDepart);
         //toboggan.switch_state(tob[cmd_order++%2]);
         //odom.print_odometry();
         

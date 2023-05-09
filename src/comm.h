@@ -13,6 +13,15 @@ typedef enum {
 
 
 typedef enum {
+    DEDANS ='d',
+    ENLEVEE = 'e',
+} TiretteState_t;
+
+typedef enum{
+    BLUE='b',
+    GREEN ='g',
+} Color_t;
+typedef enum {
     TYPE_POS ='p',
     TYPE_RESET_POS='r',
     TYPE_STOP='S',
@@ -37,16 +46,15 @@ struct msgPos{
     float theta;
 } __packed;
 
-
 class Comm
 {
 public: 
-    void update();                                      //call that in loop to read messages
-    void reportStart();                                 //sends Start Of Match signal to raspy
-    void reportActionFinsihed(uint8_t actionNumber);    //sends message indicating that an action ended
-    void reportPosition();                              //sends position (x, y, theta) to raspy
-    void reportSpeed();                                 //sends speeds (Vx, Vy, Vtheta) to raspy
-    void sendMessage (char const * message, size_t size);         //send debug Message
+    void update();                                                  //call that in loop to read messages
+    void reportTirette(TiretteState_t tir, Color_t col,char number);//sends messages indicating the color, the state of the tirette, and the number of starting pos
+    void reportActionFinsihed(uint8_t actionNumber);                //sends message indicating that an action ended
+    void reportPosition();                                          //sends position (x, y, theta) to raspy
+    void reportSpeed();                                             //sends speeds (Vx, Vy, Vtheta) to raspy
+    void sendMessage (char const * message, size_t size);           //send debug Message
     void report_cake_presence(int is_cake);
 private:
     //Attributs

@@ -78,13 +78,16 @@ void Comm::reportActionFinsihed(uint8_t actionNumber){
 }
 
 //Report du démarage
-void Comm::reportStart(){
-    char message[] = "\n\nT*";//start + type + checkSum
-    message[3] = message[2] + this->PROTOCOL_VERSION;//calcul du checksum
+void Comm::reportTirette (TiretteState_t tir, Color_t col,char number){
+    char message[] = "\n\nT****";//start + type + checkSum
+    message[3] = tir;
+    message[4] = col;
+    message[5] = number;
+    message[6] = message[2] + message[3] + message[4] + message[5] + this->PROTOCOL_VERSION;//calcul du checksum
     for (int i=0;i<2;i++){
-        SerialCom.write(message,4);//doublé pour redondance
+        SerialCom.write(message,7);//doublé pour redondance
     }
-    SerialCom.println("\n\nM Début match !");
+    if (tir == DEDANS)SerialCom.println("\n\nM Début match !");
 }
 
 //Position Report
