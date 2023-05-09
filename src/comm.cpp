@@ -7,7 +7,11 @@
 #include "holo_control.h"
 #include "odometry.h" 
 #include "trieuse.h"
-
+#include "costume.h"
+//Donne l'ordre au déguisement de se déployer
+void Comm::cmdCostume(){
+    costume.deploie();
+}
 // Analyse des informations contenues dans les messages SerialCom
 void Comm::cmdStop(){// Stops the robot
         holo_control.stop();
@@ -237,6 +241,8 @@ void Comm::execCommand(){
         case TYPE_TURBINE:
             break;
         case TYPE_ACTIVATE_COSTUME:
+            cmdCostume();
+            cmdStop();
             break;
         case TYPE_DROP_CHERRY_SLIDE:
             this->cmdSlide();

@@ -9,9 +9,10 @@
 #include "AX12A.h"
 #include "DisplayController.h"
 #include "comm.h"
-
+#include "costume.h"
 #include <Wire.h>
 
+Deguisement costume;
 Color_t col;
 TiretteState_t tiretteState;
 Toboggan toboggan(SERVO_3);
@@ -86,6 +87,7 @@ void setup() {
     
     radio.sendMessage("Initialisation Bras",19);
     arm.init(&Serial3); // NE PAS METTRE ARM.UPDATE DANS LE SETUP !!! => ÇA PLANTE
+    costume.init(&AX12As,3);
     arm.toggleMain(UNGRAB_CHOICE);
     plateau.init();
     plateau.update(PLATE_INIT);
