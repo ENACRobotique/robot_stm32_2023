@@ -158,7 +158,7 @@ class CLAW
         CLAW(int pin_servo_gauche, int pin_servo_droite);
         void init();
         void update(claw_state state);
-        bool check_presence();
+        int check_presence();
     
     private:
         Servo _Servo_Gauche;

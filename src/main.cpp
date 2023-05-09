@@ -175,7 +175,6 @@ void loop() {
     if (odom_refresh.check()){//every 10ms
         odom.update();
         holo_control.update();
-        odom.print_odometry();
     }
 
 

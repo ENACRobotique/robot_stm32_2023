@@ -240,9 +240,10 @@ void CLAW::init()
     this->_Servo_Gauche.attach(_pin_servo_gauche);
     this->_Servo_Droite.attach(_pin_servo_droite);
 
+    Wire.begin();
     proximity_sensor.init();
     proximity_sensor.configureDefault();
-    proximity_sensor.setTimeout(25);
+    proximity_sensor.setTimeout(40);
 }
 
 void CLAW::update(claw_state state)
@@ -268,12 +269,13 @@ void CLAW::update(claw_state state)
 
 }
 
-bool CLAW::check_presence()
+int CLAW::check_presence()
 {
     uint16_t range = proximity_sensor.readRangeSingleMillimeters();     //demande une lecture de distance au capteur
-    if (proximity_sensor.timeoutOccurred()) {return false;}     //retourne false si le Timeout est dépassé
+    if (proximity_sensor.timeoutOccurred()) {return -1;}     //retourne false si le Timeout est dépassé
 
-    return range <= DIST_DETECT_PALET;
+    //return range <= DIST_DETECT_PALET;
+    return range;
     //retourne true si un objet est à moins de DIST_DETECT_PALET en mm, retourne fasle sinon 
 }
 
