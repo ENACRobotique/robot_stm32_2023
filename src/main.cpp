@@ -128,17 +128,21 @@ void setup() {
 
 void loop() {
     radio.update();
-
-    if (digitalRead(TIRETTE)){//si la tirette est là
-        if (!digitalRead(POS_BUTTON)){
-            buttonPressed = 1;
-            lastPressedTimeStamp = millis();
-        }else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){
-            buttonPressed=0;
-            positionDepart %=5;
-            positionDepart++;
+    if (1)//every loop
+        {
+        if (digitalRead(TIRETTE)){//si la tirette est là
+            if (!digitalRead(POS_BUTTON)){//bouton en appui
+                buttonPressed = 1;
+                lastPressedTimeStamp = millis();
+            }else if (buttonPressed && (millis()-lastPressedTimeStamp)>10){//bouton laché et débouncé
+                buttonPressed=0;
+                positionDepart %=5;
+                positionDepart++;
+                afficheur.setNbDisplayed(positionDepart);
+            }
         }
     }
+
     if (odom_refresh.check()){//every 10ms
         odom.update();
         holo_control.update();
@@ -154,7 +158,7 @@ void loop() {
     {   digitalToggle(LED_BUILTIN);
         tiretteState = digitalRead(TIRETTE) ? DEDANS : ENLEVEE;
         col = digitalRead(COLOR) ? BLUE : GREEN;
-        radio.reportTirette(tiretteState,col,positionDepart);
+        radio.reportTirette(tiretteState, col, positionDepart);
         //toboggan.switch_state(tob[cmd_order++%2]);
         //odom.print_odometry();
         
