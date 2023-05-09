@@ -80,7 +80,7 @@ void setup() {
     pinMode(COLOR, INPUT_PULLUP);
     pinMode(POS_BUTTON,INPUT_PULLUP);
     afficheur.init();
-    afficheur.setNbDisplayed(8001);
+    afficheur.setNbDisplayed(1);
     pinMode(LED_BUILTIN,OUTPUT);
     Serial.begin(115200);
     Serial3.begin(500000);
