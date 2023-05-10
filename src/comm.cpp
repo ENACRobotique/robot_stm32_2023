@@ -11,6 +11,7 @@
 //Donne l'ordre au déguisement de se déployer
 void Comm::cmdCostume(){
     costume.deploie();
+    sendMessage("deploie costume", 16);
 }
 // Analyse des informations contenues dans les messages SerialCom
 void Comm::cmdStop(){// Stops the robot
@@ -91,7 +92,6 @@ void Comm::reportTirette (TiretteState_t tir, Color_t col,char number){
     for (int i=0;i<2;i++){
         SerialCom.write(message,7);//doublé pour redondance
     }
-    if (tir == DEDANS)SerialCom.println("\n\nM Début match !");
 }
 
 //Position Report
@@ -317,14 +317,17 @@ void Comm::cmdResume(){holo_control.set_ratio_slow(1.f);}
 
 void Comm::cmdSlide()
 {
-    char bufEnvoi[20]=" ";
-    int n = snprintf(bufEnvoi,20,"Tobbogan : %c",buffer[1]);
-    radio.sendMessage(bufEnvoi,n);
+
     switch (buffer[1])
     {
     case CLOSED_TOBOGGAN_STATE:
     case OPEN_TOBOGGAN_STATE:
+        {
+        char bufEnvoi[20]=" ";
+        int n = snprintf(bufEnvoi,20,"Tobbogan : %c",buffer[1]);
+        radio.sendMessage(bufEnvoi,n);
         toboggan.switch_state((toboggan_state_t)buffer[1]);
+        }
         break;
 
     default:
