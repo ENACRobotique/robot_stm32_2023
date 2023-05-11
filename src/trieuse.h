@@ -230,8 +230,8 @@ typedef enum{ // a changer
     CLOSED_TOBOGGAN_VAL = 2000,
 }toboggan_pos;
 typedef enum{
-    OPEN_TOBOGGAN_STATE = 'r',
-    CLOSED_TOBOGGAN_STATE = 's',
+    OPEN_TOBOGGAN_STATE = 's',//sorti
+    CLOSED_TOBOGGAN_STATE = 'r',//rentré
 }toboggan_state_t;
 
 
