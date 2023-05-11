@@ -17,7 +17,7 @@ void Comm::cmdCostume(){
 void Comm::cmdStop(){// Stops the robot
         holo_control.stop();
         holo_control.set_ratio_slow(0.f);
-        SerialCom.println("\n\nM Stopping robot.");
+        this->sendMessage("Stopping robot.",15);
 }
 
 // Recale le robot sur la postion déduite du lidar
@@ -28,14 +28,14 @@ void Comm::resetPosition(){
     odom.set_x(msg->x);
     odom.set_y(msg->y);
     odom.set_theta(msg->theta);
-    SerialCom.println("\n\nM Robot position reseted.");
+    this->sendMessage("Robot position reseted.",23);
 }
 
 //Ordre de position
 void Comm::cmdPos(){
     struct msgPos *msg = reinterpret_cast<struct msgPos *>(MSG_BUF);
     holo_control.set_ptarget(msg->x, msg->y, msg->theta);
-    SerialCom.println("\n\nMPos order acknowleged");
+    this->sendMessage("Pos order acknowleged",21);
 
 }
 
@@ -89,9 +89,8 @@ void Comm::reportTirette (TiretteState_t tir, Color_t col,char number){
     message[4] = col;
     message[5] = number;
     message[6] = message[2] + message[3] + message[4] + message[5] + this->PROTOCOL_VERSION;//calcul du checksum
-    for (int i=0;i<2;i++){
-        SerialCom.write(message,7);//doublé pour redondance
-    }
+    SerialCom.write(message,7);//doublé pour redondance
+    
 }
 
 //Position Report
