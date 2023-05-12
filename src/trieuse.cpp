@@ -486,7 +486,7 @@ Toboggan::Toboggan(int pin_servo_toboggan)
 void Toboggan::init()
 {
     this->_Servo_toboggan.attach(_pin_servo_tobogan);
-    switch_state(CLOSED_TOBOGGAN_STATE);
+    switch_state(OPEN_TOBOGGAN_STATE); // Ddon't think too much... boy !
 }
 
 void Toboggan::switch_state(toboggan_state_t cible)
