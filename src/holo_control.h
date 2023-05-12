@@ -39,6 +39,7 @@ class HoloControl{
         int cmd_mode;
         double x_table_tgt, y_table_tgt, theta_tgt;
         double vx_table_tgt, vy_table_tgt, vtheta_tgt;
+        bool target_reach;
         void recalc_vtargets_table_to_holo();
         void recalc_vtargets_position_tgt();
         float ratio_slow = 1.f;

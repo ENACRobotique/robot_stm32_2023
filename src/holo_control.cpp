@@ -8,6 +8,7 @@ HoloControl::HoloControl(MotorController *m1_, MotorController *m2_, MotorContro
         vx_table_tgt = 0.f;
         vy_table_tgt = 0.f;
         vtheta_tgt = 0.f;
+        target_reach = true;
 }
 void HoloControl::stop(){
     this->set_vtarget_raw(0.0,0.0,0.0);
@@ -103,6 +104,7 @@ void HoloControl::set_ptarget(double x, double y, double theta){
     y_table_tgt = y;
     theta_tgt = normalized(theta);
     recalc_vtargets_position_tgt();
+    target_reach = false;
     cmd_mode = POSTABLE;
 }
 
@@ -120,6 +122,7 @@ void HoloControl::update(){
         //Sotp if close to destination
         if (distance(x_table_tgt, y_table_tgt, odom->get_x(), odom->get_y()) < TOL_DIST && abs(fmod(theta_tgt,2*PI) - fmod(odom->get_theta(),2*PI)) < TOL_THETA) {
             this->stop();
+            target_reach = true;
         }
     }
  
@@ -132,4 +135,8 @@ void HoloControl::update(){
 void HoloControl::set_ratio_slow(float ratio)
 {
     this->ratio_slow = ratio;
+    if(!target_reach && ratio > 0.01) {
+        recalc_vtargets_position_tgt();
+        cmd_mode = POSTABLE;
+    } 
 }
