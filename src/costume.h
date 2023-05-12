@@ -4,7 +4,7 @@
 //This is WIP. Please change these two values if it doesn't work as intended
 typedef enum {
     RANGE_C = 200,
-    DEPLOYE_C = 490//560 si Pb Sero Bleu réglé
+    DEPLOYE_C = 540
 } etatDeguisement;
 
 class Deguisement{
@@ -14,7 +14,7 @@ class Deguisement{
         void deploie();
     private:
         DynamixelSerial* ax12;
-        int numAX = 0;
+        uint8_t numAX = 0;
 
 };
 

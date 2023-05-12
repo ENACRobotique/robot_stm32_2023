@@ -293,7 +293,7 @@ void Comm::update()
                     this->execCommand();
                 }
                 else {
-                    SerialCom.println("\n\nMChecksum error!");
+                    this->sendMessage("Checksum error !",16);
                 }
                 this->etatRadio=IDLE;
             }

@@ -7,9 +7,9 @@ void Deguisement::init(DynamixelSerial* ax, int num){
 }
 
 void Deguisement::retract(){
-    this->ax12->move(this->numAX,RANGE_C);
+    this->ax12->moveSpeed(this->numAX,RANGE_C, 100);
 }
 
 void Deguisement::deploie(){
-    this->ax12->move(this->numAX,DEPLOYE_C);
+    this->ax12->moveSpeed(this->numAX,DEPLOYE_C, 100);
 }
