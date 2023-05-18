@@ -227,7 +227,7 @@ class trieuseController2000{
 
 typedef enum{ // a changer 
     OPEN_TOBOGGAN_VAL = 1000,
-    CLOSED_TOBOGGAN_VAL = 2000,
+    CLOSED_TOBOGGAN_VAL = 2100,
 }toboggan_pos;
 typedef enum{
     OPEN_TOBOGGAN_STATE = 's',//sorti
